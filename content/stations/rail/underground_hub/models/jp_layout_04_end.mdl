@@ -1,0 +1,54 @@
+function data()
+return {
+["lods"] = {{
+["node"] = {
+["transf"] = {1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1},
+["name"] = "RootNode",
+["children"] = {{
+["transf"] = {1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1},
+["name"] = "layout_04_end",
+["mesh"] = "msh/jp/jp_layout_04_end_lod0_0.msh",
+["materials"] = {"/stations/rail/underground_hub/models/mat/jp_structure.mtl"},
+}},
+},
+["visibleFrom"] = 0,
+["visibleTo"] = 350,
+}, {
+["node"] = {
+["transf"] = {1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1},
+["name"] = "RootNode",
+["children"] = {{
+["transf"] = {1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1},
+["name"] = "layout_04_end",
+["mesh"] = "msh/jp/jp_layout_04_end_lod1_1.msh",
+["materials"] = {"/stations/rail/underground_hub/models/mat/jp_structure.mtl"},
+}},
+},
+["visibleFrom"] = 350,
+["visibleTo"] = 1100,
+}, {
+["node"] = {
+["transf"] = {1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1},
+["name"] = "RootNode",
+["children"] = {{
+["transf"] = {1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1},
+["name"] = "layout_04_end",
+["mesh"] = "msh/jp/jp_layout_04_end_lod2_2.msh",
+["materials"] = {"/stations/rail/underground_hub/models/mat/jp_structure.mtl"},
+}},
+},
+["visibleFrom"] = 1100,
+["visibleTo"] = 3000,
+}},
+["boundingInfo"] = {
+["bbMin"] = {-0.2, -15, -22.5},
+["bbMax"] = {1.5, 15, -6.5},
+},
+["collider"] = {
+["type"] = "NONE",
+},
+["version"] = 2,
+["metadata"] = {
+},
+}
+end

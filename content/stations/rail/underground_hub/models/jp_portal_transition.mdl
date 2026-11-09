@@ -1,0 +1,28 @@
+function data()
+return {
+["lods"] = {{
+["node"] = {
+["transf"] = {1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1},
+["name"] = "RootNode",
+["children"] = {{
+["transf"] = {1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1},
+["name"] = "portal_transition",
+["materials"] = {"/stations/rail/underground_hub/models/mat/jp_structure.mtl"},
+["mesh"] = "msh/jp/jp_portal_transition_lod0_0.msh",
+}},
+},
+["visibleFrom"] = 0,
+["visibleTo"] = 2500,
+}},
+["boundingInfo"] = {
+["bbMin"] = {-0.2, -8.5, -22.5},
+["bbMax"] = {1.5, 8.5, -6.5},
+},
+["collider"] = {
+["type"] = "NONE",
+},
+["version"] = 2,
+["metadata"] = {
+},
+}
+end

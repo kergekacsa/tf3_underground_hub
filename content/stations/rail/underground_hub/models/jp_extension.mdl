@@ -1,0 +1,93 @@
+function data()
+return {
+["lods"] = {{
+["visibleFrom"] = 0,
+["node"] = {
+["transf"] = {1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1},
+["children"] = {{
+["transf"] = {1, 0, 0, 0, 0, 1, -1.62921e-07, 0, 0, 1.62921e-07, 1, 0, 0, 0, 0, 1},
+["mesh"] = "msh/jp/jp_extension_lod0_0.msh",
+["materials"] = {"/stations/rail/underground_hub/models/mat/jp_structure.mtl", "/stations/rail/underground_hub/models/mat/jp_wall.mtl", "/stations/rail/underground_hub/models/mat/jp_floor.mtl", "/stations/rail/underground_hub/models/mat/jp_yellow.mtl", "::/stations/street/underground_station/models/mat/underground_station_trim.mtl", "::/stations/street/underground_station/models/mat/underground_station_trackbed.mtl", "::/stations/street/underground_station/models/mat/underground_station_tunnel_b_car_rep.mtl", "::/stations/street/underground_station/models/mat/underground_station_tunnel_b_car_add.mtl", "::/stations/street/underground_station/models/mat/underground_station_tunnel_b_car_emissive.mtl"},
+["name"] = "underground_station_extension",
+}},
+["name"] = "RootNode",
+},
+["visibleTo"] = 279.264,
+}, {
+["visibleFrom"] = 279.264,
+["node"] = {
+["transf"] = {1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1},
+["children"] = {{
+["transf"] = {1, 0, 0, 0, 0, 1, -1.62921e-07, 0, 0, 1.62921e-07, 1, 0, 0, 0, 0, 1},
+["mesh"] = "msh/jp/jp_extension_lod1_1.msh",
+["materials"] = {"/stations/rail/underground_hub/models/mat/jp_structure.mtl", "/stations/rail/underground_hub/models/mat/jp_wall.mtl", "/stations/rail/underground_hub/models/mat/jp_floor.mtl", "/stations/rail/underground_hub/models/mat/jp_yellow.mtl", "::/stations/street/underground_station/models/mat/underground_station_trim.mtl", "::/stations/street/underground_station/models/mat/underground_station_trackbed.mtl", "::/stations/street/underground_station/models/mat/underground_station_tunnel_b_car_rep.mtl", "::/stations/street/underground_station/models/mat/underground_station_tunnel_b_car_add.mtl", "::/stations/street/underground_station/models/mat/underground_station_tunnel_b_car_emissive.mtl"},
+["name"] = "underground_station_extension",
+}},
+["name"] = "RootNode",
+},
+["visibleTo"] = 837.792,
+}, {
+["visibleFrom"] = 837.792,
+["node"] = {
+["transf"] = {1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1},
+["children"] = {{
+["transf"] = {1, 0, 0, 0, 0, 1, -1.62921e-07, 0, 0, 1.62921e-07, 1, 0, 0, 0, 0, 1},
+["mesh"] = "msh/jp/jp_extension_lod2_2.msh",
+["materials"] = {"/stations/rail/underground_hub/models/mat/jp_structure.mtl", "/stations/rail/underground_hub/models/mat/jp_floor.mtl"},
+["name"] = "underground_station_extension",
+}},
+["name"] = "RootNode",
+},
+["visibleTo"] = 2513.38,
+}},
+["collider"] = {
+["transf"] = {1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 5.002726555, 7.152557373e-07, -15.98882866, 1},
+["type"] = "BOX",
+["params"] = {
+["halfExtents"] = {5.002734184, 7.350002289, 3.488828659},
+},
+},
+["metadata"] = {
+["lightSourceList"] = {
+["lights"] = {{
+["angleMax"] = 85,
+["mask"] = 0,
+["invertMask"] = true,
+["color"] = {0.890196, 0.800471, 0.380515},
+["angleMin"] = 80,
+["visibleTo"] = 500,
+["mode"] = "LIGHT",
+["visibleFrom"] = -1,
+["transf"] = {0, 0, -1, 0, 0, 1, 0, 0, 1, 0, 0, 0, 5, 5.325581395, -14, 1},
+["meshId"] = "underground_station_extension",
+["radius"] = 7,
+["strength"] = 1,
+["type"] = "SPOT",
+["fadeOutStart"] = 400,
+["lightId"] = "",
+}, {
+["angleMax"] = 85,
+["mask"] = 0,
+["invertMask"] = true,
+["color"] = {0.890196, 0.800471, 0.380515},
+["angleMin"] = 80,
+["visibleTo"] = 500,
+["mode"] = "LIGHT",
+["visibleFrom"] = -1,
+["transf"] = {0, 0, -1, 0, 0, 1, 0, 0, 1, 0, 0, 0, 5, -5.325581395, -14, 1},
+["meshId"] = "underground_station_extension",
+["radius"] = 7,
+["strength"] = 1,
+["type"] = "SPOT",
+["fadeOutStart"] = 400,
+["lightId"] = "",
+}},
+},
+},
+["version"] = 2,
+["boundingInfo"] = {
+["bbMin"] = {-7.629394531e-06, -7.350001335, -19.47765732},
+["bbMax"] = {10.00546074, 7.350002766, -12.5},
+},
+}
+end

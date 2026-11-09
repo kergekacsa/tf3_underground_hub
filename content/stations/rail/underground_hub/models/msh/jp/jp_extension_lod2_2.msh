@@ -1,0 +1,65 @@
+function data()
+return {
+["vertexAttr"] = {
+["position"] = {
+["offset"] = 0,
+["count"] = 1656,
+["numComp"] = 3,
+},
+["normal"] = {
+["offset"] = 1656,
+["count"] = 1656,
+["numComp"] = 3,
+},
+["uv0"] = {
+["offset"] = 3312,
+["count"] = 1104,
+["numComp"] = 2,
+},
+["tangent"] = {
+["offset"] = 4416,
+["count"] = 2208,
+["numComp"] = 4,
+},
+},
+["subMeshes"] = {{
+["indices"] = {
+["position"] = {
+["offset"] = 6624,
+["count"] = 504,
+},
+["normal"] = {
+["offset"] = 6624,
+["count"] = 504,
+},
+["uv0"] = {
+["offset"] = 6624,
+["count"] = 504,
+},
+["tangent"] = {
+["offset"] = 6624,
+["count"] = 504,
+},
+},
+}, {
+["indices"] = {
+["position"] = {
+["offset"] = 7128,
+["count"] = 48,
+},
+["normal"] = {
+["offset"] = 7128,
+["count"] = 48,
+},
+["uv0"] = {
+["offset"] = 7128,
+["count"] = 48,
+},
+["tangent"] = {
+["offset"] = 7128,
+["count"] = 48,
+},
+},
+}},
+}
+end

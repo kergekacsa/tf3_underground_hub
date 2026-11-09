@@ -1,0 +1,217 @@
+function data()
+return {
+["vertexAttr"] = {
+["position"] = {
+["offset"] = 0,
+["count"] = 116856,
+["numComp"] = 3,
+},
+["normal"] = {
+["offset"] = 116856,
+["count"] = 116856,
+["numComp"] = 3,
+},
+["uv0"] = {
+["offset"] = 233712,
+["count"] = 77904,
+["numComp"] = 2,
+},
+["tangent"] = {
+["offset"] = 311616,
+["count"] = 155808,
+["numComp"] = 4,
+},
+},
+["subMeshes"] = {{
+["indices"] = {
+["position"] = {
+["offset"] = 467424,
+["count"] = 7800,
+},
+["normal"] = {
+["offset"] = 467424,
+["count"] = 7800,
+},
+["uv0"] = {
+["offset"] = 467424,
+["count"] = 7800,
+},
+["tangent"] = {
+["offset"] = 467424,
+["count"] = 7800,
+},
+},
+}, {
+["indices"] = {
+["position"] = {
+["offset"] = 475224,
+["count"] = 768,
+},
+["normal"] = {
+["offset"] = 475224,
+["count"] = 768,
+},
+["uv0"] = {
+["offset"] = 475224,
+["count"] = 768,
+},
+["tangent"] = {
+["offset"] = 475224,
+["count"] = 768,
+},
+},
+}, {
+["indices"] = {
+["position"] = {
+["offset"] = 475992,
+["count"] = 912,
+},
+["normal"] = {
+["offset"] = 475992,
+["count"] = 912,
+},
+["uv0"] = {
+["offset"] = 475992,
+["count"] = 912,
+},
+["tangent"] = {
+["offset"] = 475992,
+["count"] = 912,
+},
+},
+}, {
+["indices"] = {
+["position"] = {
+["offset"] = 476904,
+["count"] = 1824,
+},
+["normal"] = {
+["offset"] = 476904,
+["count"] = 1824,
+},
+["uv0"] = {
+["offset"] = 476904,
+["count"] = 1824,
+},
+["tangent"] = {
+["offset"] = 476904,
+["count"] = 1824,
+},
+},
+}, {
+["indices"] = {
+["position"] = {
+["offset"] = 478728,
+["count"] = 1872,
+},
+["normal"] = {
+["offset"] = 478728,
+["count"] = 1872,
+},
+["uv0"] = {
+["offset"] = 478728,
+["count"] = 1872,
+},
+["tangent"] = {
+["offset"] = 478728,
+["count"] = 1872,
+},
+},
+}, {
+["indices"] = {
+["position"] = {
+["offset"] = 480600,
+["count"] = 48,
+},
+["normal"] = {
+["offset"] = 480600,
+["count"] = 48,
+},
+["uv0"] = {
+["offset"] = 480600,
+["count"] = 48,
+},
+["tangent"] = {
+["offset"] = 480600,
+["count"] = 48,
+},
+},
+}, {
+["indices"] = {
+["position"] = {
+["offset"] = 480648,
+["count"] = 2760,
+},
+["normal"] = {
+["offset"] = 480648,
+["count"] = 2760,
+},
+["uv0"] = {
+["offset"] = 480648,
+["count"] = 2760,
+},
+["tangent"] = {
+["offset"] = 480648,
+["count"] = 2760,
+},
+},
+}, {
+["indices"] = {
+["position"] = {
+["offset"] = 483408,
+["count"] = 19512,
+},
+["normal"] = {
+["offset"] = 483408,
+["count"] = 19512,
+},
+["uv0"] = {
+["offset"] = 483408,
+["count"] = 19512,
+},
+["tangent"] = {
+["offset"] = 483408,
+["count"] = 19512,
+},
+},
+}, {
+["indices"] = {
+["position"] = {
+["offset"] = 502920,
+["count"] = 3072,
+},
+["normal"] = {
+["offset"] = 502920,
+["count"] = 3072,
+},
+["uv0"] = {
+["offset"] = 502920,
+["count"] = 3072,
+},
+["tangent"] = {
+["offset"] = 502920,
+["count"] = 3072,
+},
+},
+}, {
+["indices"] = {
+["position"] = {
+["offset"] = 505992,
+["count"] = 384,
+},
+["normal"] = {
+["offset"] = 505992,
+["count"] = 384,
+},
+["uv0"] = {
+["offset"] = 505992,
+["count"] = 384,
+},
+["tangent"] = {
+["offset"] = 505992,
+["count"] = 384,
+},
+},
+}},
+}
+end

@@ -1,0 +1,53 @@
+function data()
+return {
+["boundingInfo"] = {
+["bbMax"] = {1.45062, 0.2227, 0.850126},
+["bbMin"] = {-1.45062, -0.2227, 0.270126},
+},
+["metadata"] = {
+["labelList"] = {
+["labels"] = {{
+["childId"] = "RootNode",
+["size"] = {2.6, 0.3},
+["color"] = {0.012, 0.012, 0.012},
+["alphaMode"] = "BLEND",
+["type"] = "STATION_NAME",
+["transf"] = {1, 0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, -1.3, -0.233, 0.4, 1},
+}, {
+["childId"] = "RootNode",
+["size"] = {2.6, 0.3},
+["color"] = {0.012, 0.012, 0.012},
+["alphaMode"] = "BLEND",
+["type"] = "STATION_NAME",
+["transf"] = {-1, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1.3, 0.233, 0.4, 1},
+}},
+},
+},
+["version"] = 2,
+["lods"] = {{
+["node"] = {
+["children"] = {{
+["children"] = {{
+["mesh"] = "msh/jp/jp_station_name_lod0_0.msh",
+["name"] = "era_c_station_name",
+["transf"] = {1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1},
+["materials"] = {"/stations/rail/underground_hub/models/mat/jp_sign.mtl", "::/assets/stations/rail/mat/era_c_trainstation_assets.mtl"},
+}},
+["transf"] = {1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1},
+["name"] = "era_c_station_name_grp",
+}},
+["transf"] = {1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1},
+["name"] = "RootNode",
+},
+["visibleFrom"] = 0,
+["visibleTo"] = 242.399,
+}},
+["collider"] = {
+["type"] = "BOX",
+["transf"] = {1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1},
+["params"] = {
+["halfExtents"] = {1.45062, 0.2227, 0.29},
+},
+},
+}
+end

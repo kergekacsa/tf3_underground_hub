@@ -1,0 +1,54 @@
+function data()
+return {
+["version"] = 2,
+["boundingInfo"] = {
+["bbMin"] = {-0.7325, -0.216, -17.65},
+["bbMax"] = {0.7325, 0.216, -15.5675},
+},
+["collider"] = {
+["type"] = "NONE",
+},
+["lods"] = {{
+["node"] = {
+["name"] = "RootNode",
+["transf"] = {1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1},
+["children"] = {{
+["name"] = "name_board_support",
+["transf"] = {1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1},
+["materials"] = {"::/stations/street/underground_station/models/mat/underground_station_railing.mtl"},
+["mesh"] = "msh/name_board_support_lod0.msh",
+}},
+},
+["visibleFrom"] = 0,
+["visibleTo"] = 350,
+}, {
+["node"] = {
+["name"] = "RootNode",
+["transf"] = {1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1},
+["children"] = {{
+["name"] = "name_board_support",
+["transf"] = {1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1},
+["materials"] = {"::/stations/street/underground_station/models/mat/underground_station_railing.mtl"},
+["mesh"] = "msh/name_board_support_lod1.msh",
+}},
+},
+["visibleFrom"] = 350,
+["visibleTo"] = 1100,
+}, {
+["node"] = {
+["name"] = "RootNode",
+["transf"] = {1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1},
+["children"] = {{
+["name"] = "name_board_support",
+["transf"] = {1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1},
+["materials"] = {"::/stations/street/underground_station/models/mat/underground_station_railing.mtl"},
+["mesh"] = "msh/name_board_support_lod2.msh",
+}},
+},
+["visibleFrom"] = 1100,
+["visibleTo"] = 3000,
+}},
+["metadata"] = {
+},
+}
+end

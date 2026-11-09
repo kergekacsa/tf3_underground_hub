@@ -1,0 +1,58 @@
+function data()
+return {
+["collider"] = {
+["type"] = "BOX",
+["params"] = {
+["halfExtents"] = {0.2501075864, 7.349993706, 3.49089241},
+},
+["transf"] = {1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0.2498957515, -2.384185791e-07, -15.99089241, 1},
+},
+["lods"] = {{
+["node"] = {
+["children"] = {{
+["name"] = "underground_station_end",
+["materials"] = {"::/stations/street/underground_station/models/mat/underground_station_wall.mtl", "::/stations/street/underground_station/models/mat/underground_station_wall_2.mtl", "::/stations/street/underground_station/models/mat/underground_station_trackbed.mtl", "::/stations/street/underground_station/models/mat/underground_station_trim.mtl", "::/stations/street/underground_station/models/mat/underground_station_tunnel_b_car_end.mtl", "::/stations/street/underground_station/models/mat/underground_station_floor.mtl"},
+["transf"] = {1, 0, 0, 0, 0, 1, -1.62921e-07, 0, 0, 1.62921e-07, 1, 0, 0, 0, 0, 1},
+["mesh"] = "msh/end_lod0.msh",
+}},
+["name"] = "RootNode",
+["transf"] = {1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1},
+},
+["visibleFrom"] = 0,
+["visibleTo"] = 183.643,
+}, {
+["node"] = {
+["children"] = {{
+["name"] = "underground_station_end",
+["materials"] = {"::/stations/street/underground_station/models/mat/underground_station_wall.mtl", "::/stations/street/underground_station/models/mat/underground_station_wall_2.mtl", "::/stations/street/underground_station/models/mat/underground_station_trackbed.mtl", "::/stations/street/underground_station/models/mat/underground_station_tunnel_b_car_end.mtl"},
+["transf"] = {1, 0, 0, 0, 0, 1, -1.62921e-07, 0, 0, 1.62921e-07, 1, 0, 0, 0, 0, 1},
+["mesh"] = "msh/end_lod1.msh",
+}},
+["name"] = "RootNode",
+["transf"] = {1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1},
+},
+["visibleFrom"] = 183.643,
+["visibleTo"] = 550.93,
+}, {
+["node"] = {
+["children"] = {{
+["name"] = "underground_station_end",
+["materials"] = {"::/stations/street/underground_station/models/mat/underground_station_wall.mtl"},
+["transf"] = {1, 0, 0, 0, 0, 1, -1.62921e-07, 0, 0, 1.62921e-07, 1, 0, 0, 0, 0, 1},
+["mesh"] = "msh/end_lod2.msh",
+}},
+["name"] = "RootNode",
+["transf"] = {1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1},
+},
+["visibleFrom"] = 550.93,
+["visibleTo"] = 1652.79,
+}},
+["boundingInfo"] = {
+["bbMin"] = {-0.0002118349075, -7.349993706, -19.48178482},
+["bbMax"] = {0.5000033379, 7.349993229, -12.5},
+},
+["version"] = 2,
+["metadata"] = {
+},
+}
+end

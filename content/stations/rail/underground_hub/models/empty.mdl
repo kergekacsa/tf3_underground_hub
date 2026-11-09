@@ -1,0 +1,23 @@
+function data()
+return {
+["version"] = 2,
+["boundingInfo"] = {
+["bbMin"] = {-0.1, -0.1, -0.1},
+["bbMax"] = {0.1, 0.1, 0.1},
+},
+["collider"] = {
+["type"] = "NONE",
+},
+["lods"] = {{
+["node"] = {
+["name"] = "RootNode",
+["transf"] = {1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1},
+["children"] = {},
+},
+["visibleFrom"] = 0,
+["visibleTo"] = 1000,
+}},
+["metadata"] = {
+},
+}
+end

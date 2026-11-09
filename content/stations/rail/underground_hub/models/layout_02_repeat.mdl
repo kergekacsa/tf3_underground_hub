@@ -1,0 +1,91 @@
+function data()
+return {
+["version"] = 2,
+["boundingInfo"] = {
+["bbMin"] = {-1.494104026e-06, -14.2, -19.6},
+["bbMax"] = {10, 14.2, -12.04},
+},
+["collider"] = {
+["type"] = "NONE",
+},
+["lods"] = {{
+["node"] = {
+["name"] = "RootNode",
+["transf"] = {1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1},
+["children"] = {{
+["name"] = "layout_02_repeat",
+["transf"] = {1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1},
+["materials"] = {"::/stations/street/underground_station/models/mat/underground_station_wall.mtl", "::/stations/street/underground_station/models/mat/underground_station_wall_2.mtl", "::/stations/street/underground_station/models/mat/underground_station_floor.mtl", "::/stations/street/underground_station/models/mat/underground_station_trim.mtl", "::/stations/street/underground_station/models/mat/underground_station_railing.mtl", "::/stations/street/underground_station/models/mat/underground_station_tunnel_b_car_emissive.mtl"},
+["mesh"] = "msh/layout_02_repeat_lod0.msh",
+}},
+},
+["visibleFrom"] = 0,
+["visibleTo"] = 350,
+}, {
+["node"] = {
+["name"] = "RootNode",
+["transf"] = {1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1},
+["children"] = {{
+["name"] = "layout_02_repeat",
+["transf"] = {1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1},
+["materials"] = {"::/stations/street/underground_station/models/mat/underground_station_wall.mtl", "::/stations/street/underground_station/models/mat/underground_station_wall_2.mtl", "::/stations/street/underground_station/models/mat/underground_station_floor.mtl", "::/stations/street/underground_station/models/mat/underground_station_trim.mtl", "::/stations/street/underground_station/models/mat/underground_station_railing.mtl", "::/stations/street/underground_station/models/mat/underground_station_tunnel_b_car_emissive.mtl"},
+["mesh"] = "msh/layout_02_repeat_lod1.msh",
+}},
+},
+["visibleFrom"] = 350,
+["visibleTo"] = 1100,
+}, {
+["node"] = {
+["name"] = "RootNode",
+["transf"] = {1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1},
+["children"] = {{
+["name"] = "layout_02_repeat",
+["transf"] = {1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1},
+["materials"] = {"::/stations/street/underground_station/models/mat/underground_station_wall.mtl", "::/stations/street/underground_station/models/mat/underground_station_wall_2.mtl", "::/stations/street/underground_station/models/mat/underground_station_floor.mtl", "::/stations/street/underground_station/models/mat/underground_station_trim.mtl", "::/stations/street/underground_station/models/mat/underground_station_railing.mtl", "::/stations/street/underground_station/models/mat/underground_station_tunnel_b_car_emissive.mtl"},
+["mesh"] = "msh/layout_02_repeat_lod2.msh",
+}},
+},
+["visibleFrom"] = 1100,
+["visibleTo"] = 3000,
+}},
+["metadata"] = {
+["lightSourceList"] = {
+["lights"] = {{
+["color"] = {1, 0.94, 0.83},
+["fadeOutStart"] = 250,
+["invertMask"] = true,
+["lightId"] = "",
+["mask"] = 0,
+["meshId"] = "layout_02_repeat",
+["mode"] = "LIGHT",
+["radius"] = 8,
+["strength"] = 1,
+["transf"] = {0, 0, -1, 0, 0, 1, 0, 0, 1, 0, 0, 0, 5, -12, -14.135, 1},
+["type"] = "SPOT",
+["angleMin"] = 65,
+["angleMax"] = 80,
+["backFaceLit"] = false,
+["visibleFrom"] = -1,
+["visibleTo"] = 400,
+}, {
+["color"] = {1, 0.94, 0.83},
+["fadeOutStart"] = 250,
+["invertMask"] = true,
+["lightId"] = "",
+["mask"] = 0,
+["meshId"] = "layout_02_repeat",
+["mode"] = "LIGHT",
+["radius"] = 8,
+["strength"] = 1,
+["transf"] = {0, 0, -1, 0, 0, 1, 0, 0, 1, 0, 0, 0, 5, 12, -14.135, 1},
+["type"] = "SPOT",
+["angleMin"] = 65,
+["angleMax"] = 80,
+["backFaceLit"] = false,
+["visibleFrom"] = -1,
+["visibleTo"] = 400,
+}},
+},
+},
+}
+end

@@ -1,0 +1,74 @@
+function data()
+return {
+["lods"] = {{
+["node"] = {
+["transf"] = {1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1},
+["name"] = "RootNode",
+["children"] = {{
+["transf"] = {1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1},
+["name"] = "layout_03_repeat",
+["mesh"] = "msh/jp/jp_layout_03_repeat_lod0_0.msh",
+["materials"] = {"/stations/rail/underground_hub/models/mat/jp_structure.mtl", "/stations/rail/underground_hub/models/mat/jp_wall.mtl", "/stations/rail/underground_hub/models/mat/jp_floor.mtl", "/stations/rail/underground_hub/models/mat/jp_yellow.mtl", "::/stations/street/underground_station/models/mat/underground_station_trim.mtl", "::/stations/street/underground_station/models/mat/underground_station_railing.mtl", "::/stations/street/underground_station/models/mat/underground_station_tunnel_b_car_emissive.mtl"},
+}},
+},
+["visibleFrom"] = 0,
+["visibleTo"] = 350,
+}, {
+["node"] = {
+["transf"] = {1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1},
+["name"] = "RootNode",
+["children"] = {{
+["transf"] = {1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1},
+["name"] = "layout_03_repeat",
+["mesh"] = "msh/jp/jp_layout_03_repeat_lod1_1.msh",
+["materials"] = {"/stations/rail/underground_hub/models/mat/jp_structure.mtl", "/stations/rail/underground_hub/models/mat/jp_wall.mtl", "/stations/rail/underground_hub/models/mat/jp_floor.mtl", "/stations/rail/underground_hub/models/mat/jp_yellow.mtl", "::/stations/street/underground_station/models/mat/underground_station_trim.mtl", "::/stations/street/underground_station/models/mat/underground_station_railing.mtl", "::/stations/street/underground_station/models/mat/underground_station_tunnel_b_car_emissive.mtl"},
+}},
+},
+["visibleFrom"] = 350,
+["visibleTo"] = 1100,
+}, {
+["node"] = {
+["transf"] = {1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1},
+["name"] = "RootNode",
+["children"] = {{
+["transf"] = {1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1},
+["name"] = "layout_03_repeat",
+["mesh"] = "msh/jp/jp_layout_03_repeat_lod2_2.msh",
+["materials"] = {"/stations/rail/underground_hub/models/mat/jp_structure.mtl", "/stations/rail/underground_hub/models/mat/jp_wall.mtl", "/stations/rail/underground_hub/models/mat/jp_floor.mtl", "/stations/rail/underground_hub/models/mat/jp_yellow.mtl", "::/stations/street/underground_station/models/mat/underground_station_railing.mtl", "::/stations/street/underground_station/models/mat/underground_station_tunnel_b_car_emissive.mtl"},
+}},
+},
+["visibleFrom"] = 1100,
+["visibleTo"] = 3000,
+}},
+["boundingInfo"] = {
+["bbMin"] = {-1.494104026e-06, -8.2, -19.6},
+["bbMax"] = {10, 8.2, -12.04},
+},
+["collider"] = {
+["type"] = "NONE",
+},
+["version"] = 2,
+["metadata"] = {
+["lightSourceList"] = {
+["lights"] = {{
+["visibleTo"] = 400,
+["meshId"] = "layout_03_repeat",
+["visibleFrom"] = -1,
+["backFaceLit"] = false,
+["mask"] = 0,
+["angleMin"] = 65,
+["invertMask"] = true,
+["lightId"] = "",
+["transf"] = {0, 0, -1, 0, 0, 1, 0, 0, 1, 0, 0, 0, 5, 0, -14.135, 1},
+["color"] = {1, 0.94, 0.83},
+["radius"] = 8,
+["type"] = "SPOT",
+["mode"] = "LIGHT",
+["fadeOutStart"] = 250,
+["angleMax"] = 80,
+["strength"] = 1,
+}},
+},
+},
+}
+end

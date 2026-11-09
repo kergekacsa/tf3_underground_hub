@@ -1,0 +1,160 @@
+function data()
+return {
+["vertexAttr"] = {
+["position"] = {
+["offset"] = 0,
+["count"] = 96840,
+["numComp"] = 3,
+},
+["normal"] = {
+["offset"] = 96840,
+["count"] = 96840,
+["numComp"] = 3,
+},
+["uv0"] = {
+["offset"] = 193680,
+["count"] = 64560,
+["numComp"] = 2,
+},
+["tangent"] = {
+["offset"] = 258240,
+["count"] = 129120,
+["numComp"] = 4,
+},
+},
+["subMeshes"] = {{
+["indices"] = {
+["position"] = {
+["offset"] = 387360,
+["count"] = 11400,
+},
+["normal"] = {
+["offset"] = 387360,
+["count"] = 11400,
+},
+["uv0"] = {
+["offset"] = 387360,
+["count"] = 11400,
+},
+["tangent"] = {
+["offset"] = 387360,
+["count"] = 11400,
+},
+},
+}, {
+["indices"] = {
+["position"] = {
+["offset"] = 398760,
+["count"] = 288,
+},
+["normal"] = {
+["offset"] = 398760,
+["count"] = 288,
+},
+["uv0"] = {
+["offset"] = 398760,
+["count"] = 288,
+},
+["tangent"] = {
+["offset"] = 398760,
+["count"] = 288,
+},
+},
+}, {
+["indices"] = {
+["position"] = {
+["offset"] = 399048,
+["count"] = 240,
+},
+["normal"] = {
+["offset"] = 399048,
+["count"] = 240,
+},
+["uv0"] = {
+["offset"] = 399048,
+["count"] = 240,
+},
+["tangent"] = {
+["offset"] = 399048,
+["count"] = 240,
+},
+},
+}, {
+["indices"] = {
+["position"] = {
+["offset"] = 399288,
+["count"] = 768,
+},
+["normal"] = {
+["offset"] = 399288,
+["count"] = 768,
+},
+["uv0"] = {
+["offset"] = 399288,
+["count"] = 768,
+},
+["tangent"] = {
+["offset"] = 399288,
+["count"] = 768,
+},
+},
+}, {
+["indices"] = {
+["position"] = {
+["offset"] = 400056,
+["count"] = 10368,
+},
+["normal"] = {
+["offset"] = 400056,
+["count"] = 10368,
+},
+["uv0"] = {
+["offset"] = 400056,
+["count"] = 10368,
+},
+["tangent"] = {
+["offset"] = 400056,
+["count"] = 10368,
+},
+},
+}, {
+["indices"] = {
+["position"] = {
+["offset"] = 410424,
+["count"] = 5184,
+},
+["normal"] = {
+["offset"] = 410424,
+["count"] = 5184,
+},
+["uv0"] = {
+["offset"] = 410424,
+["count"] = 5184,
+},
+["tangent"] = {
+["offset"] = 410424,
+["count"] = 5184,
+},
+},
+}, {
+["indices"] = {
+["position"] = {
+["offset"] = 415608,
+["count"] = 4032,
+},
+["normal"] = {
+["offset"] = 415608,
+["count"] = 4032,
+},
+["uv0"] = {
+["offset"] = 415608,
+["count"] = 4032,
+},
+["tangent"] = {
+["offset"] = 415608,
+["count"] = 4032,
+},
+},
+}},
+}
+end
