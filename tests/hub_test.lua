@@ -427,6 +427,21 @@ do
 	end
 end
 
+-- The icons of the construction file are files of this mod, in the sizes of the game.
+do
+	local text = support.readFile(CON)
+	local seen = 0
+	for path in text:gmatch('"::/stations/rail/underground_hub/([%w_]+%.tga)"') do
+		seen = seen + 1
+		for _, variant in ipairs({ path, (path:gsub("%.tga$", "@2x.tga")) }) do
+			local file = io.open("content/stations/rail/underground_hub/" .. variant, "rb")
+			check(file ~= nil, "icon file exists: " .. variant)
+			if file then file:close() end
+		end
+	end
+	check(seen == 2, "the construction file names an icon and a preview icon of this mod, found " .. seen)
+end
+
 if failures > 0 then
 	print(failures .. " checks failed")
 	os.exit(1)

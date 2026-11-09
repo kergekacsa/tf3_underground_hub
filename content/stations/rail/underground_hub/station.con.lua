@@ -195,8 +195,8 @@ local function makeConstructionTemplates()
 			description = {
 				name = _("HUB_UNDERGROUND_RAIL_NAME"),
 				description = _("HUB_UNDERGROUND_RAIL_DESC"),
-				icon = "::/stations/street/underground_station/underground_station.tga",
-				previewIcon = "::/stations/street/underground_station/underground_station_preview.tga",
+				icon = "::/stations/rail/underground_hub/underground_hub.tga",
+				previewIcon = "::/stations/rail/underground_hub/underground_hub_preview.tga",
 				attributes = {
 					noise =  { 40, -1 },
 					pollution = { 80, -1 },
