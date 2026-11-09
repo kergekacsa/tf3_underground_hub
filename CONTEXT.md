@@ -36,9 +36,9 @@ _Avoid_: Station mode, hybrid
 The fixed vertical distance of 18 m between two levels.
 _Avoid_: Layer spacing
 
-**Source mods**:
-The two public mods this mod is built from. Mod A is Underground Railway Station and gives the railway edges. Mod B is Simple Underground Transfer Station and gives the design, the level stacking, the tram lanes, the cargo mode and the reconfiguration after construction.
-_Avoid_: Parent mods, base mods
+**Source mod**:
+The public mod this mod is built from: Simple Underground Transfer Station. It gives the design, the level stacking, the tram lanes, the cargo mode and the reconfiguration after construction.
+_Avoid_: Parent mod, base mod
 
 **Shaft**:
 The pedestrian connection between the entrance ring and the passageway of a deeper level. It is a lane only and has no model.
