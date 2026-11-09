@@ -1,0 +1,33 @@
+function data()
+return {
+	params = {
+		map_albedo = {
+			fragmentSamplers = {
+				albedoTex = {
+					fileName = "tex/cargo_shutter_door.dds",
+					type = "TWOD",
+					wrapS = "CLAMP_TO_EDGE",
+					wrapT = "CLAMP_TO_EDGE",
+				},
+			},
+		},
+		map_metal_gloss_ao = {
+			fragmentSamplers = {
+				metalGlossAoTex = {
+					fileName = "::/stations/street/underground_station/models/mat/tex/c_i4_w_met_01_mga.dds",
+					type = "TWOD",
+					wrapS = "REPEAT",
+					wrapT = "REPEAT",
+				},
+			},
+		},
+		light_receiver = {
+			fragmentProperties = {
+				{ isLegacyMaterial = false, lightMask = 2 },
+			},
+		},
+	},
+	order = 1,
+	type = "PHYSICAL",
+}
+end

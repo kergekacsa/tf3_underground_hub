@@ -39,3 +39,7 @@ _Avoid_: Layer spacing
 **Source mods**:
 The two public mods this mod is built from. Mod A is Underground Railway Station and gives the rail platform and its models. Mod B is Simple Underground Transfer Station and gives the level stacking, the tram lanes and the cargo mode.
 _Avoid_: Parent mods, base mods
+
+**Shaft**:
+The pedestrian connection between the entrance ring and the passageway of a deeper level. It is a lane only and has no model.
+_Avoid_: Lift, escalator, stairwell

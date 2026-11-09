@@ -1,0 +1,85 @@
+function data()
+return {
+	boundingInfo = {
+		bbMax = { 3.0, 3.4, 4.0 },
+		bbMin = { -3.0, -2.4, 0.0 },
+	},
+	collider = {
+		params = {
+			halfExtents = { 3.0, 2.9, 2.0 },
+		},
+		transf = { 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0.5, 2.0, 1 },
+		type = "BOX",
+	},
+	lods = {
+		{
+			node = {
+				children = {
+					{
+						materials = {
+							"concrete.mtl",
+							"metal_wall.mtl",
+							"shutter_door.mtl",
+							"roof.mtl",
+							"steel_trim.mtl",
+						},
+						mesh = "surface_cargo_depot_lod0.msh",
+						name = "surface_cargo_depot",
+						transf = { 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1 },
+					},
+				},
+				name = "RootNode",
+				transf = { 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1 },
+			},
+			visibleFrom = 0,
+			visibleTo = 180,
+		},
+		{
+			node = {
+				children = {
+					{
+						materials = {
+							"concrete.mtl",
+							"metal_wall.mtl",
+							"shutter_door.mtl",
+							"roof.mtl",
+							"steel_trim.mtl",
+						},
+						mesh = "surface_cargo_depot_lod1.msh",
+						name = "surface_cargo_depot",
+						transf = { 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1 },
+					},
+				},
+				name = "RootNode",
+				transf = { 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1 },
+			},
+			visibleFrom = 180,
+			visibleTo = 600,
+		},
+		{
+			node = {
+				children = {
+					{
+						materials = {
+							"concrete.mtl",
+							"metal_wall.mtl",
+							"shutter_door.mtl",
+							"roof.mtl",
+							"steel_trim.mtl",
+						},
+						mesh = "surface_cargo_depot_lod2.msh",
+						name = "surface_cargo_depot",
+						transf = { 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1 },
+					},
+				},
+				name = "RootNode",
+				transf = { 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1 },
+			},
+			visibleFrom = 600,
+			visibleTo = 2500,
+		},
+	},
+	metadata = {},
+	version = 2,
+}
+end
