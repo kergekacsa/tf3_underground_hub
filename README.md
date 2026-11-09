@@ -12,7 +12,8 @@ The folder holds the copy of mod A under the new id `kacsa_underground_hub`. It 
 
 | Step | Feature | State |
 |---|---|---|
-| 1 | Copy of mod A with its own id, path and strings | Done, not yet tested in the game |
+| 1 | Copy of mod A with its own id, path and strings | Done |
+| 1b | Layouts 2 to 7 removed (ADR 0001) | Done |
 | 2 | One to four levels with own angle and length | Open |
 | 3 | Rail or Tram per level | Open |
 | 4 | Cargo mode for the hub | Open |

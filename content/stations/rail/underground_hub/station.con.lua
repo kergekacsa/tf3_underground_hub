@@ -161,7 +161,6 @@ return {
 	order = 9000,
 	params = {
 		{ key = "catenary", name = _("Catenary"), values = {_("No"), _("Yes")}, defaultIndex = 2 },
-        { key = "layout", name = _("HUB_LAYOUT_LABEL"), values = {_("HUB_LAYOUT_1"), _("HUB_LAYOUT_2"), _("HUB_LAYOUT_3"), _("HUB_LAYOUT_4"), _("HUB_LAYOUT_5"), _("HUB_LAYOUT_6"), _("HUB_LAYOUT_7")}, defaultIndex = 1, uiType = "ComboBox" },
         { key = "tunnelType", name = _("HUB_TUNNEL_LABEL"), values = {_("HUB_TUNNEL_CONCRETE"), _("HUB_TUNNEL_OLD")}, defaultIndex = 1 },
         { key = "ballast", name = _("HUB_BALLAST_LABEL"), values = {_("HUB_BALLAST_ON"), _("HUB_BALLAST_OFF")}, defaultIndex = 1 },
         { key = "interiorStyle", name = _("HUB_STYLE_LABEL"), values = {_("HUB_STYLE_ORIGINAL"), _("HUB_STYLE_JAPANESE")}, defaultIndex = 1 },
