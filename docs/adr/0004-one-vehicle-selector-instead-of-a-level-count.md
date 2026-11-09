@@ -1,0 +1,3 @@
+# One vehicle selector with an Off choice instead of a level count
+
+The hub has no level count. Levels 2 to 4 each have one vehicle selector with the choices Off, Rail and Tram, and level 1 has Rail and Tram. The owner wants a level with connected tracks to stay, while other levels can be added. A count cannot do that: the game rejects two parameters with the same key and overlapping years, so the count cannot show only the numbers above the highest connected level. With one selector per level, the selector of a connected level is hidden and the others stay. A level keeps its depth by its number, so level 3 can exist without level 2.

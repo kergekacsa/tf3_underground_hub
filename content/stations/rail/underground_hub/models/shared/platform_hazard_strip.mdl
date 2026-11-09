@@ -1,0 +1,35 @@
+function data()
+return {
+	boundingInfo = {
+		bbMax = { 0.5, 0.15, 0.01 },
+		bbMin = { -0.5, -0.15, 0.0 },
+	},
+	collider = {
+		params = {
+			halfExtents = { 0.5, 0.15, 0.005 },
+		},
+		transf = { 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0.005, 1 },
+		type = "BOX",
+	},
+	lods = {
+		{
+			node = {
+				children = {
+					{
+						materials = { "hazard.mtl" },
+						mesh = "platform_hazard_strip.msh",
+						name = "platform_hazard_strip",
+						transf = { 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1 },
+					},
+				},
+				name = "RootNode",
+				transf = { 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1 },
+			},
+			visibleFrom = 0,
+			visibleTo = 250,
+		},
+	},
+	metadata = {},
+	version = 2,
+}
+end

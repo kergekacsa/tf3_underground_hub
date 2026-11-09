@@ -5,23 +5,23 @@ A private Transport Fever 3 mod. One underground station that holds one to four 
 ## Language
 
 **Hub**:
-The whole station construction that the player places. It holds one to four levels, one cargo mode, and one surface building.
+The whole station construction that the player places. It holds up to four levels, one cargo mode, and one surface building.
 _Avoid_: Station (the game also calls each stop of a line a station)
 
 **Level**:
 One underground platform of the hub with two tracks and two side platforms. It has its own depth, angle, length and vehicle type.
 _Avoid_: Platform (a platform is the strip of one side of a level), layer, floor
 
-**Level count**:
-The number of levels the hub holds: 1 to 4.
-_Avoid_: Platform count
+**Level vehicle**:
+The one selector of a level. Level 1 chooses Rail or Tram. Levels 2 to 4 choose Off, Rail or Tram, and Off removes the level. A level keeps its depth by its number, so level 3 can exist without level 2.
+_Avoid_: Level switch, level count, platform count
 
 **Level angle**:
 The compass direction of one level in degrees, in steps of 5. Levels at different angles cross above each other.
 _Avoid_: Orientation, rotation
 
 **Level length**:
-The platform length of one level: 40, 80, 120, 160, 240 or 320 m.
+The platform length of one level: 40, 80, 120, 160, 240 or 320 m. A new rail level starts at 240 m and a new tram level at 40 m.
 _Avoid_: Size
 
 **Vehicle type**:
@@ -37,9 +37,13 @@ The fixed vertical distance of 18 m between two levels.
 _Avoid_: Layer spacing
 
 **Source mods**:
-The two public mods this mod is built from. Mod A is Underground Railway Station and gives the rail platform and its models. Mod B is Simple Underground Transfer Station and gives the level stacking, the tram lanes and the cargo mode.
+The two public mods this mod is built from. Mod A is Underground Railway Station and gives the railway edges. Mod B is Simple Underground Transfer Station and gives the design, the level stacking, the tram lanes, the cargo mode and the reconfiguration after construction.
 _Avoid_: Parent mods, base mods
 
 **Shaft**:
 The pedestrian connection between the entrance ring and the passageway of a deeper level. It is a lane only and has no model.
 _Avoid_: Lift, escalator, stairwell
+
+**Connected level**:
+A level of a built station that has a track or street, not part of the station, on one of its free nodes. While the station is edited, the controls of a connected level are locked and a red note says why.
+_Avoid_: Used level, occupied level

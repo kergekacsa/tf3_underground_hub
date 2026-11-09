@@ -57,10 +57,11 @@ local stubs = {
 	},
 }
 
-function M.loadScript(path)
+function M.loadScript(path, extraEnv)
 	local env = setmetatable({
 		require = function(name) return assert(stubs[name], "no stub for " .. name) end,
 	}, { __index = _G })
+	for key, value in pairs(extraEnv or {}) do env[key] = value end
 	local chunk = assert(loadfile(path, "t", env))
 	chunk()
 	return env.data()

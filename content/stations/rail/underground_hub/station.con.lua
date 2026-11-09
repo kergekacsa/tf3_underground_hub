@@ -10,30 +10,12 @@ local function angleValues(stepIncrement)
 	return values
 end
 
+local function checkScript(name)
+	return { fileName = "station.script@" .. name, params = {} }
+end
+
 local function levelEnabledScript(level)
-	if level == 1 then return nil end
-	return { fileName = "station.script@checkLevel" .. level .. "EnabledFn", params = {} }
-end
-
-local function railEnabledScript()
-	return { fileName = "station.script@checkRailOptionsEnabledFn", params = {} }
-end
-
-local function makeLevelCountParam()
-	local values, numbers = {}, {}
-	for level = 1, maxLevels do
-		values[level] = tostring(level)
-		numbers[level] = level
-	end
-	return {
-		key = "levelCount",
-		name = _("HUB_LEVEL_COUNT"),
-		values = values,
-		numbers = numbers,
-		defaultIndex = 1,
-		displayMode = "Horizontal",
-		group = "hubGeneral",
-	}
+	return checkScript("checkLevel" .. level .. "EnabledFn")
 end
 
 local function makeCargoModeParam()
@@ -44,30 +26,80 @@ local function makeCargoModeParam()
 		defaultIndex = 1,
 		displayMode = "Horizontal",
 		group = "hubGeneral",
+		postConstructionModifiable = true,
 	}
 end
 
+-- The title of a level: a note with one value, shown as bold text above the controls of the level.
+local function makeLevelTitleParam(level)
+	return {
+		key = "level" .. level .. "Title",
+		name = _("HUB_LEVEL_" .. level .. "_TITLE"),
+		values = { _("HUB_LEVEL_" .. level .. "_TITLE") },
+		defaultIndex = 1,
+		uiType = "Button",
+		hideLabel = true,
+		group = "hubTitle" .. level,
+		postConstructionModifiable = true,
+	}
+end
+
+-- Level 1 has rail and tram. Levels 2 to 4 also have off, which removes the level.
 local function makeLevelVehicleParam(level)
+	local values = { _("HUB_VEHICLE_RAIL"), _("HUB_VEHICLE_TRAM") }
+	if level >= 2 then table.insert(values, 1, _("HUB_VEHICLE_OFF")) end
 	return {
 		key = "level" .. level .. "Vehicle",
-		name = _("HUB_LEVEL_" .. level .. "_VEHICLE"),
-		values = { _("HUB_VEHICLE_RAIL"), _("HUB_VEHICLE_TRAM") },
+		name = _("HUB_LEVEL_VEHICLE"),
+		values = values,
 		defaultIndex = 1,
 		displayMode = "Horizontal",
+		hideLabel = true,
 		group = "hubLevel" .. level,
-		checkEnabledScript = levelEnabledScript(level),
+		postConstructionModifiable = true,
+		checkEnabledScript = level == 1 and levelEnabledScript(1) or checkScript("checkLevel" .. level .. "SwitchFn"),
+	}
+end
+
+-- A note with one value that the game greys out. The stylesheet colours the group red.
+local function makeLevelLockParam(level)
+	return {
+		key = "level" .. level .. "Lock",
+		name = _("HUB_LEVEL_" .. level .. "_LOCKED"),
+		values = { _("HUB_LEVEL_" .. level .. "_LOCKED") },
+		defaultIndex = 1,
+		uiType = "Button",
+		hideLabel = true,
+		group = "hubLock",
+		postConstructionModifiable = true,
+		checkEnabledScript = checkScript("checkLevel" .. level .. "LockFn"),
+	}
+end
+
+-- Only a station that is being placed has this parameter: the game leaves out parameters that cannot
+-- change after construction when it edits a built station. The script tells the two cases apart by it.
+local function makePlacementMarkerParam()
+	return {
+		key = "hubPlacement",
+		name = "hubPlacement",
+		values = { "" },
+		defaultIndex = 1,
+		uiType = "Button",
+		hideLabel = true,
+		checkEnabledScript = checkScript("checkHiddenFn"),
 	}
 end
 
 local function makeLevelAngleParam(level, stepIncrement)
 	return {
 		key = "level" .. level .. "Angle",
-		name = _("HUB_LEVEL_" .. level .. "_ANGLE"),
+		name = _("HUB_LEVEL_ANGLE"),
 		displayMode = "Sparse",
 		values = angleValues(stepIncrement),
 		defaultIndex = defaultAngleIndices[level],
 		uiType = "Slider",
 		group = "hubLevel" .. level,
+		postConstructionModifiable = true,
 		checkEnabledScript = levelEnabledScript(level),
 	}
 end
@@ -82,7 +114,9 @@ local function makePlatformLengthsValues(platformConfig)
 	return result
 end
 
-local function makeLevelLengthParam(level, platformLengths)
+-- A rail level starts at 240 m and a tram level at 40 m: the saved indices 2 and 4 of the platform lengths.
+local function makeLevelLengthParam(level, platformLengths, forTram)
+	local defaultSavedIndex = forTram and 4 or 2
 	-- Menu positions map to the saved values, so the choices are displayed in ascending order.
 	local indices = {}
 	for i = 1, #platformLengths do indices[i] = i end
@@ -91,17 +125,18 @@ local function makeLevelLengthParam(level, platformLengths)
 	local defaultIndex = 1
 	for position, savedIndex in ipairs(indices) do
 		sortedLengths[position] = platformLengths[savedIndex]
-		if savedIndex == 2 then defaultIndex = position end
+		if savedIndex == defaultSavedIndex then defaultIndex = position end
 	end
 	return {
-		key = "level" .. level .. "Length",
-		name = _("HUB_LEVEL_" .. level .. "_LENGTH"),
+		key = "level" .. level .. (forTram and "TramLength" or "Length"),
+		name = _("HUB_LEVEL_LENGTH"),
 		values = makePlatformLengthsValues(sortedLengths),
 		numbers = indices,
 		defaultIndex = defaultIndex,
 		displayMode = "Sparse",
 		group = "hubLevel" .. level,
-		checkEnabledScript = levelEnabledScript(level),
+		postConstructionModifiable = true,
+		checkEnabledScript = checkScript("checkLevel" .. level .. (forTram and "TramLengthFn" or "LengthFn")),
 	}
 end
 
@@ -111,26 +146,26 @@ local stepIncrement = 5.0
 
 local function makeParams()
 	local params = {
-		makeLevelCountParam(),
 		makeCargoModeParam(),
-		{ key = "ballast", name = _("HUB_BALLAST_LABEL"), values = {_("HUB_BALLAST_ON"), _("HUB_BALLAST_OFF")}, defaultIndex = 1, group = "hubGeneral", checkEnabledScript = railEnabledScript() },
 		{ key = "trackType", name = _("Track Type"), defaultIndex = 2,
 		  tooltips = {_("Simple"), _("Standard")},
 		  values = {"::/infrastructure/track/simple/simple.tga", "::/infrastructure/track/standard/standard.tga"},
-		  displayMode = "Horizontal", uiType = "IconButton", yearFrom = 1930, yearTo = 1980, group = "hubGeneral", checkEnabledScript = railEnabledScript() },
+		  displayMode = "Horizontal", uiType = "IconButton", yearFrom = 1930, yearTo = 1980, group = "hubGeneral", postConstructionModifiable = true, checkEnabledScript = checkScript("checkTrackTypeLegacyFn") },
 		{ key = "trackType", name = _("Track Type"), defaultIndex = 2,
 		  tooltips = {_("Simple"), _("Standard"), _("High-Speed")},
 		  values = {"::/infrastructure/track/simple/simple.tga", "::/infrastructure/track/standard/standard.tga", "::/infrastructure/track/high_speed/high_speed.tga"},
-		  displayMode = "Horizontal", uiType = "IconButton", yearFrom = 1980, yearTo = 0, group = "hubGeneral", checkEnabledScript = railEnabledScript() },
-		{ key = "catenary", name = _("Catenary"), values = {_("No"), _("Yes")}, defaultIndex = 2, group = "hubGeneral" },
-		{ key = "interiorStyle", name = _("HUB_STYLE_LABEL"), values = {_("HUB_STYLE_ORIGINAL"), _("HUB_STYLE_JAPANESE")}, defaultIndex = 1, group = "hubStyle" },
-		{ key = "tunnelType", name = _("HUB_TUNNEL_LABEL"), values = {_("HUB_TUNNEL_CONCRETE"), _("HUB_TUNNEL_OLD")}, defaultIndex = 1, group = "hubStyle", checkEnabledScript = railEnabledScript() },
+		  displayMode = "Horizontal", uiType = "IconButton", yearFrom = 1980, yearTo = 0, group = "hubGeneral", postConstructionModifiable = true, checkEnabledScript = checkScript("checkTrackTypeModernFn") },
+		{ key = "catenary", name = _("Catenary"), values = {_("No"), _("Yes")}, defaultIndex = 2, group = "hubGeneral", postConstructionModifiable = true, checkEnabledScript = checkScript("checkCatenaryEnabledFn") },
 	}
 	for level = 1, maxLevels do
+		params[#params + 1] = makeLevelTitleParam(level)
 		params[#params + 1] = makeLevelVehicleParam(level)
 		params[#params + 1] = makeLevelAngleParam(level, stepIncrement)
-		params[#params + 1] = makeLevelLengthParam(level, platformLengthValues)
+		params[#params + 1] = makeLevelLengthParam(level, platformLengthValues, false)
+		params[#params + 1] = makeLevelLengthParam(level, platformLengthValues, true)
+		params[#params + 1] = makeLevelLockParam(level)
 	end
+	params[#params + 1] = makePlacementMarkerParam()
 	return params
 end
 
