@@ -27,7 +27,7 @@ return {
 ["catenaryPoleModel"] = "models/empty.mdl",
 ["catenaryMaxPoleDistance"] = 3.33,
 ["catenaryMultiPoleModel"] = "models/empty.mdl",
-["catenaryBase"] = 6.447,
+["catenaryBase"] = 5.4,
 ["catenaryMultiInnerPoleModel"] = "models/empty.mdl",
 ["catenaryMultiGirderModel"] = "models/empty.mdl",
 },

@@ -1,6 +1,6 @@
-# Underground Hub
+# Underground Transfer Hub
 
-A private Transport Fever 3 mod. One underground station that holds one to four stacked levels. Each level is a two-track platform with its own angle, length and vehicle type.
+A Transport Fever 3 mod. One underground station that holds one to four stacked levels. Each level is a two-track platform with its own angle, length and vehicle type.
 
 ## Language
 
@@ -40,8 +40,20 @@ _Avoid_: Layer spacing
 The public mod this mod is built from: Simple Underground Transfer Station. It gives the design, the level stacking, the tram lanes, the cargo mode and the reconfiguration after construction.
 _Avoid_: Parent mod, base mod
 
+**Level stairs**:
+The pedestrian connection from a level to the ring of the level directly below it. It starts in the four corridors of the upper level, beside the foot of the stairs from the ring, and ends on the ring of the lower level. It has a model.
+_Avoid_: Connector, escalator
+
+**Shared platform**:
+The round platform in the middle of the lower ring, where the level stairs of both platform sides meet.
+_Avoid_: Central landing, podium
+
+**Exit stairs**:
+The two stairs from the shared platform down to the ring of the lower level.
+_Avoid_: Ring stairs
+
 **Shaft**:
-The pedestrian connection between the entrance ring and the passageway of a deeper level. It is a lane only and has no model.
+The pedestrian connection between the entrance ring and the passageway of a level that lies below a gap, such as level 3 without level 2. It is a lane only and has no model.
 _Avoid_: Lift, escalator, stairwell
 
 **Connected level**:

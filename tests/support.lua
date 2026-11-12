@@ -31,9 +31,6 @@ local stubs = {
 			return { kind = "lane", curves = curves, types = types, w1 = w1, w2 = w2, link = link }
 		end,
 	},
-	["::/scripts/construction/modulesutil.lua"] = {
-		addGroundFaces = function(texture, generated, sub) sub.groundTexture = texture end,
-	},
 	["::/scripts/construction/constructionutil.lua"] = {
 		addEdges = function(curves, result, kind, spec, flag, a, b)
 			result.edgeLists = result.edgeLists or {}
@@ -57,10 +54,17 @@ local stubs = {
 	},
 }
 
+-- The modules of this mod, by their name in the game.
+local modModules = {
+	["kacsa_underground_hub::/stations/rail/underground_hub/hub_script.lua"] = "content/stations/rail/underground_hub/hub_script.lua",
+}
+
 function M.loadScript(path, extraEnv)
-	local env = setmetatable({
-		require = function(name) return assert(stubs[name], "no stub for " .. name) end,
-	}, { __index = _G })
+	local env = setmetatable({}, { __index = _G })
+	env.require = function(name)
+		if modModules[name] then return assert(loadfile(modModules[name], "t", env))() end
+		return assert(stubs[name], "no stub for " .. name)
+	end
 	for key, value in pairs(extraEnv or {}) do env[key] = value end
 	local chunk = assert(loadfile(path, "t", env))
 	chunk()

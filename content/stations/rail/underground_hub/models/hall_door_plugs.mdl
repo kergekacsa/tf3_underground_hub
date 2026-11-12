@@ -1,0 +1,31 @@
+function data()
+return {
+	boundingInfo = {
+		bbMax = { 13.0000, 10.2400, -14.1500 },
+		bbMin = { -13.0000, -10.2400, -17.6500 },
+	},
+	collider = {
+		type = "NONE",
+	},
+	lods = {
+		{
+			node = {
+				children = {
+					{
+						materials = { "::/stations/street/underground_station/models/mat/underground_station_wall_2.mtl" },
+						mesh = "msh/hall_door_plugs.msh",
+						name = "hall_door_plugs",
+						transf = { 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1 },
+					},
+				},
+				name = "RootNode",
+				transf = { 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1 },
+			},
+			visibleFrom = 0,
+			visibleTo = 6000,
+		},
+	},
+	metadata = {},
+	version = 2,
+}
+end

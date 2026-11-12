@@ -1,0 +1,67 @@
+function data()
+return { 
+		boundingInfo = { 
+			bbMax = { 5.64478, 1.32707, 2.50714, },
+			bbMin = { -1.45987, -1.30682, -3.38674, },
+		},
+		collider = { 
+			params = { 
+				halfExtents = { 3.55233, 1.31694, 2.94694, },
+			},
+			transf = { 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 2.09246, 0.0101269, -0.4398, 1, },
+			type = "BOX",
+		},
+		lods = {
+			{ 
+				node = { 
+					children = {
+						{ 
+							materials = { "::/assets/buildings/res/hedges/mat/hdg_02_3m_Mat.mtl", "::/assets/buildings/res/hedges/mat/Mesh_mtl_Mat.mtl", },
+							mesh = "msh/back_hedge_lod0.msh",
+							name = "hdg_02_3m_lod0",
+							transf = { 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, },
+						},
+					},
+					name = "RootNode",
+					transf = { 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, },
+				},
+				visibleFrom = 0,
+				visibleTo = 192,
+			},
+			{ 
+				node = { 
+					children = {
+						{ 
+							materials = { "::/assets/buildings/res/hedges/mat/hdg_02_3m_Mat.mtl", "::/assets/buildings/res/hedges/mat/Mesh_mtl_Mat.mtl", },
+							mesh = "msh/back_hedge_lod1.msh",
+							name = "hdg_02_3m_lod1",
+							transf = { 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, },
+						},
+					},
+					name = "RootNode",
+					transf = { 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, },
+				},
+				visibleFrom = 192,
+				visibleTo = 575,
+			},
+			{ 
+				node = { 
+					children = {
+						{ 
+							materials = { "::/assets/buildings/res/hedges/mat/Mesh_mtl_Mat.mtl", },
+							mesh = "msh/back_hedge_lod2.msh",
+							name = "hdg_02_3m_lod2",
+							transf = { 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, },
+						},
+					},
+					name = "RootNode",
+					transf = { 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, },
+				},
+				visibleFrom = 575,
+				visibleTo = 1725,
+			},
+		},
+		metadata = { },
+		version = 2,
+	}
+end

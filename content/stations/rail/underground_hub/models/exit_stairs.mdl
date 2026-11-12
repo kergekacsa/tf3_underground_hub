@@ -1,0 +1,31 @@
+function data()
+return {
+	boundingInfo = {
+		bbMax = { 1.4823, 6.9250, -26.6236 },
+		bbMin = { -1.4823, -6.9250, -30.0000 },
+	},
+	collider = {
+		type = "NONE",
+	},
+	lods = {
+		{
+			node = {
+				children = {
+					{
+						materials = { "::/stations/street/underground_station/models/mat/underground_station_floor.mtl", "::/stations/street/underground_station/models/mat/underground_station_wall_3.mtl", "::/stations/street/underground_station/models/mat/underground_station_railing.mtl" },
+						mesh = "msh/exit_stairs.msh",
+						name = "exit_stairs",
+						transf = { 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1 },
+					},
+				},
+				name = "RootNode",
+				transf = { 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1 },
+			},
+			visibleFrom = 0,
+			visibleTo = 6000,
+		},
+	},
+	metadata = {},
+	version = 2,
+}
+end

@@ -1,0 +1,28 @@
+function data()
+return {
+	order = 0,
+	params = {
+		emissive_scale = {
+			fragmentProperties = {
+				{ emissiveScale = { 3, 3, 3 }, fromTime = 0, toTime = 24 },
+			},
+		},
+		light_receiver = {
+			fragmentProperties = {
+				{ isLegacyMaterial = false, lightMask = 2 },
+			},
+		},
+		map_emissive = {
+			fragmentSamplers = {
+				emissiveTex = {
+					fileName = "::/stations/street/underground_station/models/mat/tex/street_lights_emmisive.dds",
+					type = "TWOD",
+					wrapS = "REPEAT",
+					wrapT = "REPEAT",
+				},
+			},
+		},
+	},
+	type = "EMISSIVE",
+}
+end
