@@ -573,8 +573,16 @@ local function addRailEdges(result, level, tracks, firstNode)
 	return stoppingNodes
 end
 
+-- The game draws a ballast bed of this height on every railway edge, also with empty track models.
+local ballastHeight = 0.3
+-- The floor of the hall between the platforms, where the tram rails of the hall model lie.
+local hallFloorZ = -18.11
+-- The outline edges of a tram level lie this far below the floor, so their ballast bed stays hidden.
+local silhouetteZ = hallFloorZ - ballastHeight - 0.6
+
 -- A tram level has no edges across its hall, so the placement preview would show only its two ends.
--- These two parallel railway edges are inert: their nodes are not free, and their track style has no visible model.
+-- These two parallel railway edges are inert: their nodes are not free, and their track style has
+-- no visible model. They lie below the floor of the hall.
 local function addTramSilhouette(result, level)
 	local halfLength = level.halfLength
 	local levelTransf = levelTransform(level)
@@ -582,7 +590,7 @@ local function addTramSilhouette(result, level)
 		local xs = {-halfLength-edgeBuffer, 0, halfLength+edgeBuffer}
 		local curves = {}
 		for n = 1, #xs-1 do
-			curves[#curves+1] = {{xs[n],y,hallZ},{xs[n+1],y,hallZ}}
+			curves[#curves+1] = {{xs[n],y,silhouetteZ},{xs[n+1],y,silhouetteZ}}
 		end
 		constructionutil.addEdges(transform(curves, levelTransf), result, "TRACK", {
 			type = silhouetteTemplate, edgeType = "TUNNEL", edgeTypeName = own("station_hall.tunnel")
@@ -949,6 +957,11 @@ local function addPaving(sub, face)
 	table.insert(sub.groundFaces, { face = turnedPlotFace(face), modes = {{ type = "FILL", key = pavingTexture }} })
 end
 
+-- The game blends the ground at the edge of a face, and grass grows about 1 m into the paving
+-- there. A paved strip of this depth in front of the plot keeps that edge away from the plot and
+-- reaches the pavement of the street.
+local forecourtDepth = 3.0
+
 -- Faces in the plot of the game station, before the turn.
 local function addGround(sub, operation)
 	sub.groundFaces = sub.groundFaces or {}
@@ -956,9 +969,14 @@ local function addGround(sub, operation)
 		{ pavedHalfWidth, gamePlotFrontY, 0.0 }, { -pavedHalfWidth, gamePlotFrontY, 0.0 },
 		{ -pavedHalfWidth, plotBackRowY, 0.0 }, { pavedHalfWidth, plotBackRowY, 0.0 },
 	}
+	local function forecourtFace(minX)
+		local outerY = gamePlotFrontY - forecourtDepth
+		return { { 8.0, outerY, 0.0 }, { minX, outerY, 0.0 }, { minX, gamePlotFrontY, 0.0 }, { 8.0, gamePlotFrontY, 0.0 } }
+	end
 	if not operation.isCargo then
 		addPlotTexture(sub, generatedData["static"].curves["ground_face"][1])
 		addPaving(sub, pavedFace)
+		addPaving(sub, forecourtFace(-8.0))
 		return
 	end
 
@@ -973,6 +991,7 @@ local function addGround(sub, operation)
 		slopeHigh = 0.6,
 	})
 	addPaving(sub, pavedFace)
+	addPaving(sub, forecourtFace(minX))
 	addPaving(sub, { { -3.5, 8.0, 0.0 }, { minX + 0.5, 8.0, 0.0 }, { minX + 0.5, 23.5, 0.0 }, { -3.5, 23.5, 0.0 } })
 end
 

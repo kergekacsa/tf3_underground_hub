@@ -405,6 +405,16 @@ do
 	check(#terminals == 8, "mixed hub has eight terminals")
 	check(#result.edgeLists == 24, "mixed hub adds 24 edge calls, got " .. #result.edgeLists)
 	check(result.edgeLists[7].kind == "TRACK" and result.edgeLists[7].spec.edgeTypeName == OWN .. "station_hall.tunnel" and result.edgeLists[7].spec.type == OWN .. "track_silhouette.street_template", "a tram level starts with inert silhouette edges across its hall")
+	-- The game draws a ballast bed of 0.3 m on every railway edge. The outline edges lie so deep
+	-- that it stays below the floor of the hall, where the tram rails are.
+	local HALL_FLOOR_Z, BALLAST_HEIGHT, LEVEL_2_DROP = -18.11, 0.3, 18
+	for _, list in ipairs({ result.edgeLists[7], result.edgeLists[8] }) do
+		for _, curve in ipairs(list.curves) do
+			for _, point in ipairs(curve) do
+				check(point[3] + BALLAST_HEIGHT < HALL_FLOOR_Z - LEVEL_2_DROP - 0.5, "the ballast bed of an outline edge stays below the floor of the tram hall, found edge at " .. point[3])
+			end
+		end
+	end
 	local first, second = result.edgeLists[7].curves[1][1], result.edgeLists[8].curves[1][1]
 	check(result.edgeLists[8].spec.type == OWN .. "track_silhouette.street_template" and near(math.sqrt((first[1] - second[1]) ^ 2 + (first[2] - second[2]) ^ 2), 5), "the silhouette is two parallel tracks 5 m apart")
 	check(result.edgeLists[9].kind == "STREET" and result.edgeLists[9].spec.tramTrackType == "ELECTRIC", "tram level uses an electric street edge by default")
@@ -945,6 +955,20 @@ do
 			end
 		end
 		check(textured ~= nil and paved ~= nil, "the plot has its ground texture and a paved part at the street, operation " .. mode)
+		-- Grass grows about 1 m into the paving from the edge of a face. A paved strip in front of
+		-- the plot keeps that edge 3 m away, over the whole width of the plot.
+		local FORECOURT_DEPTH = 3
+		local forecourt = false
+		for _, ground in ipairs(sub.groundFaces) do
+			if ground.modes[1].key:find("asphalt_01.gtex", 1, true) then
+				local lowX, highX, lowY, highY = math.huge, -math.huge, math.huge, -math.huge
+				for _, point in ipairs(ground.face) do
+					lowX, highX, lowY, highY = math.min(lowX, point[1]), math.max(highX, point[1]), math.min(lowY, point[2]), math.max(highY, point[2])
+				end
+				if near(lowY, STREET_Y) and near(highY, STREET_Y + FORECOURT_DEPTH) and lowX <= -8 and highX >= 8 then forecourt = true end
+			end
+		end
+		check(forecourt, "a paved strip of 3 m lies in front of the whole plot, operation " .. mode)
 		for _, ground in ipairs(sub.groundFaces) do
 			check(ground.modes[1].key:match("%.gtex$") ~= nil, "a ground face names a ground texture, found " .. ground.modes[1].key)
 		end
