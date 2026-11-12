@@ -7,6 +7,7 @@
 //   exit_stairs.mdl      the two stairs from the shared platform down to the ring
 //   platform_rail.mdl    one piece of the railing around the shared platform
 //   back_hedge.mdl       a hedge of the game that does not reach down into the entrance stairs
+//   mat/, mat/tex/       copies of four materials of the game, with DXT1 copies of five of their textures
 // Run in kacsa_underground_hub_dev: node tools/build_stair_models.js
 // The hall is read from the game archive, so the game MUST be installed. All lengths are in metres,
 // in the coordinates of the upper level.
@@ -25,6 +26,7 @@ const HEDGE_PATH = '::/assets/buildings/res/hedges/';
 const HEDGE_MODEL = 'hdg_02_3m.mdl';
 const HEDGE_MESH = 'msh/hdg_02_3m_lod2.002_lod';
 const HEDGE_MIN_Z = -1.0;       // the ceiling of the entrance stairs lies 1.69 m deep below the back hedge
+const CONTENT_DIR = path.dirname(path.dirname(GAME_ARCHIVE));
 const OUT_DIR = path.join(__dirname, '..', '..', 'kacsa_underground_hub', 'content', 'stations', 'rail', 'underground_hub', 'models');
 
 // ---------- geometry of the hall of the game, measured in its mesh
@@ -173,6 +175,78 @@ function writeMesh(fileBase, mesh) {
   fs.writeFileSync(fileBase + '.msh.blob', Buffer.concat(parts));
 }
 
+// ---------- materials of the game that read a DXT5 texture without its alpha channel
+// The validation of the game asks for DXT1 where a material does not read the alpha channel of a
+// texture. The mod holds a copy of each such material in mat/, and a DXT1 copy of each such
+// texture in mat/tex/. A copy has the same colours as the texture of the game, bit for bit.
+const OPAQUE_MATERIALS = [
+  { material: HEDGE_PATH + 'mat/Mesh_mtl_Mat.mtl', textures: ['Mesh_mtl_albo.dds', 'Mesh_mtl_mga.dds'] },
+  { material: HEDGE_PATH + 'mat/hdg_02_3m_Mat.mtl', textures: ['hdg_02_3m_mga.dds'] },
+  { material: GAME_MODEL_PATH + 'mat/underground_station_trackbed.mtl', textures: ['asphalt_01_metal_gloss_ao_h.dds'] },
+  { material: '::/infrastructure/street/tram/mat/new_medium_tram_paving.mtl', textures: ['new_medium_tram_metal_gloss_ao.dds'] },
+];
+const ownName = (resource) => path.posix.basename(resource).toLowerCase();
+
+// A file of the game by its resource name. Its archive is the first folder of the name that has a zip file.
+function readGameResource(resource) {
+  const parts = resource.replace(/^::\//, '').split('/');
+  for (let depth = 1; depth < parts.length; depth++) {
+    const archive = path.join(CONTENT_DIR, ...parts.slice(0, depth)) + '.zip';
+    if (fs.existsSync(archive)) return execFileSync('unzip', ['-p', archive, parts.slice(depth - 1).join('/')], { maxBuffer: 1 << 28 });
+  }
+  throw new Error('no archive of the game holds ' + resource);
+}
+
+// A DXT5 texture as DXT1: every block keeps its colour part and loses its alpha part.
+function dxt5ToDxt1(dds) {
+  const HEADER = 128, HEIGHT = 12, WIDTH = 16, LINEAR_SIZE = 20, MIPMAPS = 28, FOURCC = 84;
+  const DXT5_BLOCK = 16, DXT1_BLOCK = 8, ALPHA_PART = 8;
+  if (dds.toString('ascii', FOURCC, FOURCC + 4) !== 'DXT5') throw new Error('not a DXT5 texture');
+  const blocksAlong = (size, level) => Math.ceil(Math.max(1, size >> level) / 4);
+  const blocksOf = (level) => blocksAlong(dds.readUInt32LE(WIDTH), level) * blocksAlong(dds.readUInt32LE(HEIGHT), level);
+  let blocks = 0;
+  for (let level = 0; level < Math.max(1, dds.readUInt32LE(MIPMAPS)); level++) blocks += blocksOf(level);
+  if (dds.length !== HEADER + blocks * DXT5_BLOCK) throw new Error('a DXT5 texture has an unexpected size');
+  const out = Buffer.alloc(HEADER + blocks * DXT1_BLOCK);
+  dds.copy(out, 0, 0, HEADER);
+  out.write('DXT1', FOURCC, 'ascii');
+  out.writeUInt32LE(blocksOf(0) * DXT1_BLOCK, LINEAR_SIZE);
+  for (let i = 0; i < blocks; i++) {
+    const from = HEADER + i * DXT5_BLOCK + ALPHA_PART, to = HEADER + i * DXT1_BLOCK;
+    const c0 = dds.readUInt16LE(from), c1 = dds.readUInt16LE(from + 2), indices = dds.readUInt32LE(from + 4);
+    // DXT5 reads four colours from every block. DXT1 does so only when c0 > c1, so a block with
+    // c0 < c1 gets its two colours swapped, and a block of one colour uses its first colour only.
+    const swap = c0 < c1;
+    out.writeUInt16LE(swap ? c1 : c0, to);
+    out.writeUInt16LE(swap ? c0 : c1, to + 2);
+    out.writeUInt32LE(c0 === c1 ? 0 : swap ? (indices ^ 0x55555555) >>> 0 : indices, to + 4);
+  }
+  return out;
+}
+
+function writeOpaqueMaterials() {
+  fs.mkdirSync(path.join(OUT_DIR, 'mat', 'tex'), { recursive: true });
+  for (const { material, textures } of OPAQUE_MATERIALS) {
+    const folder = path.posix.dirname(material) + '/';
+    const copied = new Set();
+    const text = readGameResource(material).toString('utf8').replace(/fileName = "([^"]+)"/g, (_, name) => {
+      const resource = name.startsWith('/') ? '::' + name : folder + name;
+      if (!textures.includes(path.posix.basename(name))) return 'fileName = "' + resource + '"';
+      fs.writeFileSync(path.join(OUT_DIR, 'mat', 'tex', ownName(name)), dxt5ToDxt1(readGameResource(resource)));
+      copied.add(path.posix.basename(name));
+      return 'fileName = "tex/' + ownName(name) + '"';
+    });
+    if (copied.size !== textures.length) throw new Error(material + ' does not read every texture of its list');
+    fs.writeFileSync(path.join(OUT_DIR, 'mat', ownName(material)), text);
+  }
+}
+
+// The text of a model, with the material copies of this mod in place of those materials of the game.
+function withOwnMaterials(model) {
+  for (const { material } of OPAQUE_MATERIALS) model = model.split('"' + material + '"').join('"mat/' + ownName(material) + '"');
+  return model;
+}
+
 // ---------- the hall of the game without the four corridor walls
 // At the foot of the stairs from the ring a passenger turns to the platform. The wall that then
 // lies ahead after one more turn is the wall that goes: it faces away from the centre of the hub.
@@ -210,15 +284,15 @@ function buildHallWithDoors() {
 }
 
 // The model file of a game model, with the meshes of this mod, the light material that is always
-// on, and the other materials taken from the game.
+// on, the material copies of this mod, and the other materials taken from the game.
 function writeModelCopy(gameName, name) {
   const source = readGameFile(gameName + '.mdl').toString('utf8');
   if (!source.includes('"' + GAME_LIGHT_MATERIAL + '"')) throw new Error(gameName + ' has no light material');
-  const model = source
+  const model = withOwnMaterials(source
     .split('"' + GAME_LIGHT_MATERIAL + '"').join('"mat/hub_light.mtl"')
     .replace(/"mat\/underground/g, '"' + GAME_MODEL_PATH + 'mat/underground')
     .replace(/"\/(infrastructure|assets)\//g, '"::/$1/')
-    .split('msh/' + gameName + '_lod').join('msh/' + name + '_lod');
+    .split('msh/' + gameName + '_lod').join('msh/' + name + '_lod'));
   fs.writeFileSync(path.join(OUT_DIR, name + '.mdl'), model);
 }
 
@@ -250,9 +324,9 @@ function buildBackHedge() {
     fs.writeFileSync(path.join(OUT_DIR, 'msh', 'back_hedge_lod' + lod + '.msh'), text);
     fs.writeFileSync(path.join(OUT_DIR, 'msh', 'back_hedge_lod' + lod + '.msh.blob'), blob);
   }
-  const model = read(HEDGE_MODEL).toString('utf8')
+  const model = withOwnMaterials(read(HEDGE_MODEL).toString('utf8')
     .replace(/"mat\//g, '"' + HEDGE_PATH + 'mat/')
-    .split(HEDGE_MESH).join('msh/back_hedge_lod');
+    .split(HEDGE_MESH).join('msh/back_hedge_lod'));
   for (const lod of [0, 1, 2]) {
     if (!model.includes('"msh/back_hedge_lod' + lod + '.msh"')) throw new Error('hedge model names no mesh of lod ' + lod);
   }
@@ -376,7 +450,8 @@ function freeHandrail(put, at, risers) {
 
 // First flight: from an opening in the corridor wall towards the centre of the hub, between the
 // wall of the hall and the stairs from the ring. `turn` maps the flight at +x, +y to its place.
-function addFirstFlight(face, turn) {
+// The coarse form has a ramp for the steps, and no handrails and no light panels.
+function addFirstFlight(face, turn, coarse) {
   const put = (material, points, normal, uvs) => face(material, points.map(turn), turn(normal), uvs);
   const topCeiling = CORRIDOR_Z + ROOM_HEIGHT;
   const ceilingNormal = [CORRIDOR_Z - MID_Z, 0, -(FLIGHT1_TOP_X - FLIGHT1_BOTTOM_X)];
@@ -385,10 +460,15 @@ function addFirstFlight(face, turn) {
   put('hallWall', rectX(DOOR_X, ZONE_FAR_Y, STAIR_ZONE_Y, CORRIDOR_Z, topCeiling), [1, 0, 0]);
   put('floor', rectZ(CORRIDOR_Z, FLIGHT1_TOP_X, DOOR_X, ZONE_NEAR_Y, ZONE_FAR_Y), UP);
   put('ceiling', rectZ(topCeiling, FLIGHT1_TOP_X, DOOR_X, ZONE_NEAR_Y, ZONE_FAR_Y), DOWN);
-  for (let i = 0; i < RISERS_1; i++) {
-    const x = FLIGHT1_TOP_X - i * TREAD, top = CORRIDOR_Z - i * RISE;
-    put('floor', rectX(x, ZONE_NEAR_Y, ZONE_FAR_Y, top - RISE, top), [-1, 0, 0]);
-    if (i > 0) put('floor', rectZ(top, x, x + TREAD, ZONE_NEAR_Y, ZONE_FAR_Y), UP);
+  if (coarse) {
+    put('floor', [[FLIGHT1_TOP_X, ZONE_NEAR_Y, CORRIDOR_Z], [FLIGHT1_BOTTOM_X, ZONE_NEAR_Y, MID_Z],
+      [FLIGHT1_BOTTOM_X, ZONE_FAR_Y, MID_Z], [FLIGHT1_TOP_X, ZONE_FAR_Y, CORRIDOR_Z]], scale(ceilingNormal, -1));
+  } else {
+    for (let i = 0; i < RISERS_1; i++) {
+      const x = FLIGHT1_TOP_X - i * TREAD, top = CORRIDOR_Z - i * RISE;
+      put('floor', rectX(x, ZONE_NEAR_Y, ZONE_FAR_Y, top - RISE, top), [-1, 0, 0]);
+      if (i > 0) put('floor', rectZ(top, x, x + TREAD, ZONE_NEAR_Y, ZONE_FAR_Y), UP);
+    }
   }
   // The wall towards the hall ends at GALLERY_X. From there to the landing the flight is open to
   // the round hall, above a parapet that follows the steps.
@@ -397,19 +477,19 @@ function addFirstFlight(face, turn) {
     put('wall', rectY(y, FLIGHT1_TOP_X, DOOR_X, CORRIDOR_Z, topCeiling), normal);
     put('wall', [[FLIGHT1_TOP_X, y, CORRIDOR_Z - WALL_SKIRT], [wallEndX, y, lineZ(wallEndX) - WALL_SKIRT],
       [wallEndX, y, lineZ(wallEndX) + ROOM_HEIGHT], [FLIGHT1_TOP_X, y, topCeiling]], normal);
-    bar(put, [FLIGHT1_TOP_X, railY, CORRIDOR_Z + RAIL_HEIGHT], [FLIGHT1_BOTTOM_X, railY, MID_Z + RAIL_HEIGHT]);
+    if (!coarse) bar(put, [FLIGHT1_TOP_X, railY, CORRIDOR_Z + RAIL_HEIGHT], [FLIGHT1_BOTTOM_X, railY, MID_Z + RAIL_HEIGHT]);
   }
   for (let i = RISERS_1 - 1; FLIGHT1_TOP_X - i * TREAD < GALLERY_X; i--) {
     const x = FLIGHT1_TOP_X - i * TREAD;
     put('wall', rectY(ZONE_NEAR_Y, x, Math.min(x + TREAD, GALLERY_X), MID_Z, CORRIDOR_Z - i * RISE), [0, -1, 0]);
   }
   const POST_SPACING = 0.9;
-  for (let x = FLIGHT1_BOTTOM_X + POST_SPACING / 2; x < GALLERY_X; x += POST_SPACING) {
+  for (let x = FLIGHT1_BOTTOM_X + POST_SPACING / 2; !coarse && x < GALLERY_X; x += POST_SPACING) {
     bar(put, [x, ZONE_NEAR_Y + RAIL_OFFSET, lineZ(x)], [x, ZONE_NEAR_Y + RAIL_OFFSET, lineZ(x) + RAIL_HEIGHT]);
   }
   put('ceiling', [[FLIGHT1_TOP_X, ZONE_NEAR_Y, topCeiling], [FLIGHT1_BOTTOM_X, ZONE_NEAR_Y, MID_CEILING_Z],
     [FLIGHT1_BOTTOM_X, ZONE_FAR_Y, MID_CEILING_Z], [FLIGHT1_TOP_X, ZONE_FAR_Y, topCeiling]], ceilingNormal);
-  for (const part of [0.25, 0.75]) {
+  for (const part of coarse ? [] : [0.25, 0.75]) {
     const x = FLIGHT1_TOP_X + (FLIGHT1_BOTTOM_X - FLIGHT1_TOP_X) * part;
     lightPanel(put, [x, ZONE_MID_Y, topCeiling + (MID_CEILING_Z - topCeiling) * part], [0, 1, 0], [FLIGHT1_TOP_X - FLIGHT1_BOTTOM_X, 0, CORRIDOR_Z - MID_Z], ceilingNormal);
   }
@@ -417,8 +497,8 @@ function addFirstFlight(face, turn) {
 
 // The landing where the two first flights of one platform side meet, and the second flight: a free
 // flight in the middle of the hall, down to its side of the shared platform. `turn` maps the parts of the +y side to
-// their place.
-function addLandingAndSecondFlight(face, turn) {
+// their place. The coarse form has a ramp for the steps, and no handrails and no light panel.
+function addLandingAndSecondFlight(face, turn, coarse) {
   const put = (material, points, normal, uvs) => face(material, points.map(turn), turn(normal), uvs);
   const drumEdgeY = (x) => Math.sqrt(RING_INNER_RADIUS * RING_INNER_RADIUS - x * x);
 
@@ -438,22 +518,32 @@ function addLandingAndSecondFlight(face, turn) {
     put('wall', rectX(side * GALLERY_X, drumEdgeY(GALLERY_X), ZONE_NEAR_Y, MID_Z, MID_CEILING_Z), [-side, 0, 0]);
     put('wall', rectX(side * FLIGHT2_X1, drumEdgeY(FLIGHT2_X1), ZONE_NEAR_Y, MID_Z - 2 * RISE, MID_Z), [-side, 0, 0]);
   }
-  lightPanel(put, [0, ZONE_MID_Y, MID_CEILING_Z], [0, 1, 0], [1, 0, 0], DOWN);
+  if (!coarse) lightPanel(put, [0, ZONE_MID_Y, MID_CEILING_Z], [0, 1, 0], [1, 0, 0], DOWN);
 
   const lineZ = (y) => MID_Z - (FLIGHT2_TOP_Y - y) * SLOPE;
-  for (let i = 0; i < RISERS_2; i++) {
-    const y = FLIGHT2_TOP_Y - i * TREAD, top = MID_Z - i * RISE;
-    put('floor', rectY(y, FLIGHT2_X0, FLIGHT2_X1, top - RISE, top), [0, -1, 0]);
-    if (i > 0) {
-      put('floor', rectZ(top, FLIGHT2_X0, FLIGHT2_X1, y, y + TREAD), UP);
-      for (const [x, normal] of [[FLIGHT2_X0, [-1, 0, 0]], [FLIGHT2_X1, [1, 0, 0]]]) {
-        put('wall', [[x, y, lineZ(y) - SLAB], [x, y + TREAD, lineZ(y + TREAD) - SLAB], [x, y + TREAD, top], [x, y, top]], normal);
+  const sides = [[FLIGHT2_X0, [-1, 0, 0]], [FLIGHT2_X1, [1, 0, 0]]];
+  if (coarse) {
+    put('floor', [[FLIGHT2_X0, FLIGHT2_TOP_Y, MID_Z], [FLIGHT2_X1, FLIGHT2_TOP_Y, MID_Z],
+      [FLIGHT2_X1, FLIGHT2_BOTTOM_Y, SHARED_Z], [FLIGHT2_X0, FLIGHT2_BOTTOM_Y, SHARED_Z]], [0, -SLOPE, 1]);
+    for (const [x, normal] of sides) {
+      put('wall', [[x, FLIGHT2_TOP_Y, MID_Z - SLAB], [x, FLIGHT2_BOTTOM_Y, lineZ(FLIGHT2_BOTTOM_Y) - SLAB],
+        [x, FLIGHT2_BOTTOM_Y, SHARED_Z], [x, FLIGHT2_TOP_Y, MID_Z]], normal);
+    }
+  } else {
+    for (let i = 0; i < RISERS_2; i++) {
+      const y = FLIGHT2_TOP_Y - i * TREAD, top = MID_Z - i * RISE;
+      put('floor', rectY(y, FLIGHT2_X0, FLIGHT2_X1, top - RISE, top), [0, -1, 0]);
+      if (i > 0) {
+        put('floor', rectZ(top, FLIGHT2_X0, FLIGHT2_X1, y, y + TREAD), UP);
+        for (const [x, normal] of sides) {
+          put('wall', [[x, y, lineZ(y) - SLAB], [x, y + TREAD, lineZ(y + TREAD) - SLAB], [x, y + TREAD, top], [x, y, top]], normal);
+        }
       }
     }
   }
   put('wall', [[FLIGHT2_X0, FLIGHT2_TOP_Y, MID_Z - SLAB], [FLIGHT2_X1, FLIGHT2_TOP_Y, MID_Z - SLAB],
     [FLIGHT2_X1, FLIGHT2_BOTTOM_Y, lineZ(FLIGHT2_BOTTOM_Y) - SLAB], [FLIGHT2_X0, FLIGHT2_BOTTOM_Y, lineZ(FLIGHT2_BOTTOM_Y) - SLAB]], [0, SLOPE, -1]);
-  for (const x of [FLIGHT2_X0 + RAIL_OFFSET, FLIGHT2_X1 - RAIL_OFFSET]) {
+  for (const x of coarse ? [] : [FLIGHT2_X0 + RAIL_OFFSET, FLIGHT2_X1 - RAIL_OFFSET]) {
     freeHandrail(put, (run) => [x, FLIGHT2_TOP_Y - run, MID_Z - run * SLOPE], RISERS_2);
     joinPlatformRailing(put, [x, FLIGHT2_BOTTOM_Y, SHARED_Z], RISE);
   }
@@ -472,8 +562,8 @@ function joinPlatformRailing(put, foot, lift) {
 // above the roof of the ring, and the shared platform in the middle. Towards each landing the wall
 // ends at the height of the landing, so the landings look into the hall. Ribs on the wall meet
 // beams below the ceiling, and the beams meet at a round light in the middle. A light band runs
-// around the top of the wall.
-function addDrum(face) {
+// around the top of the wall. The coarse form has no light panels between the beams.
+function addDrum(face, coarse) {
   for (let a = 0; a < 360; a += ARC_STEP) {
     const fan = (radius, z) => [[0, 0, z], onCircle(radius, a, z), onCircle(radius, a + ARC_STEP, z)];
     face('floor', fan(RING_INNER_RADIUS, LOWER_RING_Z), UP);
@@ -531,7 +621,7 @@ function addDrum(face) {
       face('ceiling', [at(a, HUB_RADIUS, side * RIB_HALF_WIDTH, beamBottom), at(a, RING_INNER_RADIUS, side * RIB_HALF_WIDTH, beamBottom),
         at(a, RING_INNER_RADIUS, side * RIB_HALF_WIDTH, MID_CEILING_Z), at(a, HUB_RADIUS, side * RIB_HALF_WIDTH, MID_CEILING_Z)], scale(onCircle(1, a + 90, 0), side));
     }
-    lightPanel(face, onCircle((HUB_RADIUS + RING_INNER_RADIUS) / 2, a + RIB_STEP / 2, MID_CEILING_Z), onCircle(1, a + RIB_STEP / 2, 0), onCircle(1, a + RIB_STEP / 2 + 90, 0), DOWN);
+    if (!coarse) lightPanel(face, onCircle((HUB_RADIUS + RING_INNER_RADIUS) / 2, a + RIB_STEP / 2, MID_CEILING_Z), onCircle(1, a + RIB_STEP / 2, 0), onCircle(1, a + RIB_STEP / 2 + 90, 0), DOWN);
   }
   for (let a = 0; a < 360; a += ARC_STEP) {
     face('light', [[0, 0, beamBottom], onCircle(HUB_RADIUS, a, beamBottom), onCircle(HUB_RADIUS, a + ARC_STEP, beamBottom)], DOWN, [[u0, v0], [u1, v0], [u1, v1]]);
@@ -597,12 +687,24 @@ function lightBlock(name, position) {
 \t\t\t\t\t},`;
 }
 
-function writeModel(name, build, lights) {
-  const builder = makeBuilder();
-  build(builder.face);
-  const mesh = builder.toMesh();
-  writeMesh(path.join(OUT_DIR, 'msh', name), mesh);
-  const { min, max } = builder.bounds();
+// The validation of the game allows this much mesh data in the lowest detail level of a model.
+const WORST_LEVEL_LIMIT = 256 * 1024;
+const VISIBLE_TO = 6000;
+
+// `build(face, coarse)` adds the faces of the model. With `coarseFrom` the model has a second
+// detail level, the coarse form, which the game shows from that distance in metres.
+function writeModel(name, build, lights, coarseFrom) {
+  const levels = (coarseFrom ? [false, true] : [false]).map((coarse) => {
+    const builder = makeBuilder();
+    build(builder.face, coarse);
+    const mesh = builder.toMesh();
+    const file = name + (coarse ? '_coarse' : '');
+    writeMesh(path.join(OUT_DIR, 'msh', file), mesh);
+    return { builder, mesh, file, from: coarse ? coarseFrom : 0, to: coarse || !coarseFrom ? VISIBLE_TO : coarseFrom };
+  });
+  const worst = fs.statSync(path.join(OUT_DIR, 'msh', levels[levels.length - 1].file + '.msh.blob')).size;
+  if (worst > WORST_LEVEL_LIMIT) throw new Error(name + ': the lowest detail level has ' + worst + ' bytes of mesh data');
+  const { min, max } = levels[0].builder.bounds();
   const list = (v) => v.map((x) => x.toFixed(4)).join(', ');
   const metadata = lights.length === 0 ? '\tmetadata = {},' : `\tmetadata = {
 \t\tlightSourceList = {
@@ -621,12 +723,12 @@ return {
 \t\ttype = "NONE",
 \t},
 \tlods = {
-\t\t{
+${levels.map((level) => `\t\t{
 \t\t\tnode = {
 \t\t\t\tchildren = {
 \t\t\t\t\t{
-\t\t\t\t\t\tmaterials = { ${mesh.materials.map((file) => '"' + file + '"').join(', ')} },
-\t\t\t\t\t\tmesh = "msh/${name}.msh",
+\t\t\t\t\t\tmaterials = { ${level.mesh.materials.map((file) => '"' + file + '"').join(', ')} },
+\t\t\t\t\t\tmesh = "msh/${level.file}.msh",
 \t\t\t\t\t\tname = "${name}",
 \t\t\t\t\t\ttransf = { 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1 },
 \t\t\t\t\t},
@@ -634,9 +736,9 @@ return {
 \t\t\t\tname = "RootNode",
 \t\t\t\ttransf = { 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1 },
 \t\t\t},
-\t\t\tvisibleFrom = 0,
-\t\t\tvisibleTo = 6000,
-\t\t},
+\t\t\tvisibleFrom = ${level.from},
+\t\t\tvisibleTo = ${level.to},
+\t\t},`).join('\n')}
 \t},
 ${metadata}
 \tversion = 2,
@@ -647,6 +749,7 @@ end
 
 fs.mkdirSync(path.join(OUT_DIR, 'msh'), { recursive: true });
 writeLightMaterial();
+writeOpaqueMaterials();
 buildHallWithDoors();
 buildSurfaceCopy();
 buildBackHedge();
@@ -655,11 +758,12 @@ const LIGHT_DROP = 0.5; // a light source hangs this far below its ceiling
 const flightLight = [(FLIGHT1_TOP_X + FLIGHT1_BOTTOM_X) / 2, ZONE_MID_Y, (CORRIDOR_Z + MID_Z) / 2 + ROOM_HEIGHT - LIGHT_DROP];
 const landingLight = [0, ZONE_MID_Y, MID_CEILING_Z - LIGHT_DROP];
 const drumLight = [4.5, 0, MID_CEILING_Z - LIGHT_DROP];
-writeModel('level_stairs', (face) => {
-  for (const turn of [same, mirrorX, mirrorY, opposite]) addFirstFlight(face, turn);
-  for (const turn of [same, opposite]) addLandingAndSecondFlight(face, turn);
-  addDrum(face);
-}, [...[same, mirrorX, mirrorY, opposite].map((turn) => turn(flightLight)), ...[same, opposite].flatMap((turn) => [turn(landingLight), turn(drumLight)])]);
+const STAIRS_COARSE_FROM = 300; // metres: from here the game shows the stairs without steps, handrails and light panels
+writeModel('level_stairs', (face, coarse) => {
+  for (const turn of [same, mirrorX, mirrorY, opposite]) addFirstFlight(face, turn, coarse);
+  for (const turn of [same, opposite]) addLandingAndSecondFlight(face, turn, coarse);
+  addDrum(face, coarse);
+}, [...[same, mirrorX, mirrorY, opposite].map((turn) => turn(flightLight)), ...[same, opposite].flatMap((turn) => [turn(landingLight), turn(drumLight)])], STAIRS_COARSE_FROM);
 writeModel('exit_stairs', addExitStairs, []);
 writeModel('platform_rail', addPlatformRail, []);
 writeModel('hall_door_plugs', addDoorPlugs, []);

@@ -22,6 +22,22 @@ return {
 				transf = { 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1 },
 			},
 			visibleFrom = 0,
+			visibleTo = 300,
+		},
+		{
+			node = {
+				children = {
+					{
+						materials = { "::/stations/street/underground_station/models/mat/underground_station_floor.mtl", "::/stations/street/underground_station/models/mat/underground_station_wall_3.mtl", "::/stations/street/underground_station/models/mat/underground_station_wall_2.mtl", "::/stations/street/underground_station/models/mat/underground_station_roof.mtl", "mat/hub_light.mtl" },
+						mesh = "msh/level_stairs_coarse.msh",
+						name = "level_stairs",
+						transf = { 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1 },
+					},
+				},
+				name = "RootNode",
+				transf = { 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1 },
+			},
+			visibleFrom = 300,
 			visibleTo = 6000,
 		},
 	},

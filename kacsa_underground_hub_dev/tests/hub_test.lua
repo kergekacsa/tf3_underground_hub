@@ -266,6 +266,49 @@ do
 	check(light:find("fromTime = 0, toTime = 24", 1, true), "the light material is on all day")
 	local surface = support.readFile("content/stations/rail/underground_hub/models/surface.mdl")
 	check(surface:find('"mat/hub_light.mtl"', 1, true) and not surface:find("underground_station_light.mtl", 1, true), "the entrance building uses the light material of this mod")
+
+	-- The validation of the game allows 256 KB of mesh data in the lowest detail level of a model.
+	local MODELS = "content/stations/rail/underground_hub/models/"
+	local WORST_LEVEL_LIMIT = 256 * 1024
+	for _, name in ipairs({ "level_stairs", "exit_stairs", "platform_rail", "hall_door_plugs", "hall_doors", "surface", "back_hedge" }) do
+		local worst
+		for mesh in support.readFile(MODELS .. name .. ".mdl"):gmatch('mesh = "([^"]+)"') do worst = mesh end
+		local file = assert(io.open(MODELS .. worst .. ".blob", "rb"))
+		local size = file:seek("end")
+		file:close()
+		check(size <= WORST_LEVEL_LIMIT, "the lowest detail level of model " .. name .. " has at most 256 KB of mesh data, found " .. size .. " bytes")
+	end
+	-- The stairs model has a coarse second level for that: ramps for the steps, and no handrails.
+	local coarse = support.readFile(MODELS .. "msh/level_stairs_coarse.msh")
+	local coarseMaterials = model:match('materials = {([^}]*)},%s*mesh = "msh/level_stairs_coarse.msh"')
+	check(coarseMaterials ~= nil and select(2, coarse:gsub("indices = {", "")) == select(2, coarseMaterials:gsub("%.mtl", "")), "the coarse stairs have one material for each mesh part")
+	check(not coarse:find("count = 0[ ,}]"), "the coarse stairs have no empty mesh part")
+	check(coarseMaterials ~= nil and not coarseMaterials:find("railing", 1, true), "the coarse stairs have no handrails")
+	local fullTo, coarseFrom = model:match('mesh = "msh/level_stairs.msh".-visibleTo = (%d+),'), model:match('mesh = "msh/level_stairs_coarse.msh".-visibleFrom = (%d+),')
+	check(fullTo ~= nil and fullTo == coarseFrom, "the coarse stairs start where the full stairs end")
+
+	-- The validation of the game asks for DXT1 where a material does not read the alpha channel of
+	-- a texture. Four materials of the game read DXT5 textures that way, so the models of this mod
+	-- use copies of those materials, with DXT1 copies of those textures.
+	local MATERIAL_COPIES = {
+		{ model = "back_hedge", copy = "mesh_mtl_mat", game = "Mesh_mtl_Mat.mtl", textures = { "mesh_mtl_albo", "mesh_mtl_mga" } },
+		{ model = "back_hedge", copy = "hdg_02_3m_mat", game = "hdg_02_3m_Mat.mtl", textures = { "hdg_02_3m_mga" } },
+		{ model = "hall_doors", copy = "underground_station_trackbed", game = "models/mat/underground_station_trackbed.mtl", textures = { "asphalt_01_metal_gloss_ao_h" } },
+		{ model = "hall_doors", copy = "new_medium_tram_paving", game = "tram/mat/new_medium_tram_paving.mtl", textures = { "new_medium_tram_metal_gloss_ao" } },
+	}
+	local FOURCC_FIRST, FOURCC_LAST = 85, 88
+	for _, entry in ipairs(MATERIAL_COPIES) do
+		local description = support.readFile(MODELS .. entry.model .. ".mdl")
+		check(description:find('"mat/' .. entry.copy .. '.mtl"', 1, true) and not description:find(entry.game, 1, true), "model " .. entry.model .. " uses the material copy " .. entry.copy)
+		local material = support.readFile(MODELS .. "mat/" .. entry.copy .. ".mtl")
+		for _, texture in ipairs(entry.textures) do
+			check(material:find('fileName = "tex/' .. texture .. '.dds"', 1, true), "material copy " .. entry.copy .. " reads the texture copy " .. texture)
+			local file = assert(io.open(MODELS .. "mat/tex/" .. texture .. ".dds", "rb"))
+			local head = file:read(FOURCC_LAST)
+			file:close()
+			check(head:sub(FOURCC_FIRST, FOURCC_LAST) == "DXT1", "texture copy " .. texture .. " has the format DXT1")
+		end
+	end
 	for _, mode in ipairs({ 1, 2, 3 }) do
 		local _, entrance = build({ cargoMode = mode })
 		check(countModels(entrance, "models/surface.mdl") == 1 and countModels(entrance, "underground_station_surface.mdl") == 0, "the entrance building is the copy with lights, in operation " .. mode)
@@ -988,12 +1031,14 @@ end
 
 -- The files of the mod page and the pictures of the menu.
 do
-	local NAME_LIMIT, SUMMARY_LIMIT = 32, 100
-	local page = support.readFile("_metadata/modinfo.json")
+	local SUMMARY_LIMIT = 100
+	local NAME_ADDITION = " for Tram and Rail"
+	local page = support.readFile("_metadata/modinfo.json"):gsub("\r\n", "\n")
 	local name, summary = page:match('"name": "([^"]+)",\n    "summary"'), page:match('"summary": "([^"]+)"')
-	check(name ~= nil and #name <= NAME_LIMIT, "the name of the mod page has at most " .. NAME_LIMIT .. " characters")
 	check(summary ~= nil and #summary <= SUMMARY_LIMIT and not summary:find("\n", 1, true), "the summary of the mod page has at most " .. SUMMARY_LIMIT .. " characters")
-	check(name ~= nil and support.readFile(STRINGS):find('"HUB_UNDERGROUND_RAIL_NAME": "' .. name .. '"', 1, true) ~= nil, "the construction menu and the mod page use the same English name")
+	local menuName = support.readFile(STRINGS):match('"HUB_UNDERGROUND_RAIL_NAME": "([^"]+)"')
+	check(name ~= nil and name == menuName .. NAME_ADDITION, "the name of the mod page is the English name of the construction menu and '" .. NAME_ADDITION .. "'")
+	check(name ~= nil and page:find('"description": "<h2>' .. name .. '</h2>', 1, true) ~= nil, "the description of the mod page starts with the name of the mod page")
 
 	local function bytes(path, count)
 		local file = io.open(path, "rb")

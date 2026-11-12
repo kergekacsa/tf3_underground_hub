@@ -16,7 +16,7 @@ return {
 				node = { 
 					children = {
 						{ 
-							materials = { "::/assets/buildings/res/hedges/mat/hdg_02_3m_Mat.mtl", "::/assets/buildings/res/hedges/mat/Mesh_mtl_Mat.mtl", },
+							materials = { "mat/hdg_02_3m_mat.mtl", "mat/mesh_mtl_mat.mtl", },
 							mesh = "msh/back_hedge_lod0.msh",
 							name = "hdg_02_3m_lod0",
 							transf = { 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, },
@@ -32,7 +32,7 @@ return {
 				node = { 
 					children = {
 						{ 
-							materials = { "::/assets/buildings/res/hedges/mat/hdg_02_3m_Mat.mtl", "::/assets/buildings/res/hedges/mat/Mesh_mtl_Mat.mtl", },
+							materials = { "mat/hdg_02_3m_mat.mtl", "mat/mesh_mtl_mat.mtl", },
 							mesh = "msh/back_hedge_lod1.msh",
 							name = "hdg_02_3m_lod1",
 							transf = { 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, },
@@ -48,7 +48,7 @@ return {
 				node = { 
 					children = {
 						{ 
-							materials = { "::/assets/buildings/res/hedges/mat/Mesh_mtl_Mat.mtl", },
+							materials = { "mat/mesh_mtl_mat.mtl", },
 							mesh = "msh/back_hedge_lod2.msh",
 							name = "hdg_02_3m_lod2",
 							transf = { 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, },
