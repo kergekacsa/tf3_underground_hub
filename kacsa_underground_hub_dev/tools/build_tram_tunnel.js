@@ -3,7 +3,7 @@
 // models. The rail tunnels do, the car tunnels name three, so an unconnected tram tunnel stays open
 // and shows the empty space behind it. This copy names five. The two extra ones are for a dead end
 // that covers only a part of the tunnel width, which the one street of a tram level never has.
-// Run from the mod folder: node tools/build_tram_tunnel.js
+// Run in kacsa_underground_hub_dev: node tools/build_tram_tunnel.js
 // The tunnel is read from the game archive, so the game MUST be installed.
 const fs = require('fs');
 const path = require('path');
@@ -12,7 +12,7 @@ const { execFileSync } = require('child_process');
 const GAME_ARCHIVE = process.env.TF3_TUNNEL_ARCHIVE
   || 'C:/Program Files (x86)/Steam/steamapps/common/Transport Fever 3/base/content/infrastructure/tunnel.zip';
 const GAME_FILE = 'tunnel/tunnel_b_car.tunnel.lua';
-const OUT_FILE = path.join(__dirname, '..', 'content', 'stations', 'rail', 'underground_hub', 'tram_end.tunnel.lua');
+const OUT_FILE = path.join(__dirname, '..', '..', 'kacsa_underground_hub', 'content', 'stations', 'rail', 'underground_hub', 'tram_end.tunnel.lua');
 
 // Each entry replaces one text of the game file. A text that is missing stops the tool, so a change
 // of the game file does not pass unseen.

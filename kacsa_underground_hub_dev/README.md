@@ -2,6 +2,17 @@
 
 A mod for Transport Fever 3. The terms are in `CONTEXT.md` and the decisions in `docs/adr/`.
 
+## Layout
+
+The mod has two folders in the staging area of the game, side by side.
+
+| Folder | Holds |
+|---|---|
+| `kacsa_underground_hub` | The mod as the game loads it and uploads it: `mod.json`, `strings.json`, `content`, `_metadata` and `image_00.jpg`. Nothing else MAY be in it, because the game uploads the whole folder. |
+| `kacsa_underground_hub_dev` | The git repository, this README, `CONTEXT.md`, `docs`, `tests` and `tools`. |
+
+The repository tracks both folders: its work tree is the staging area (`core.worktree = ../..`), and `.git/info/exclude` leaves out every other folder there. The `.gitignore` of the staging area belongs to another repository and ignores the mod folder, so a new file of the mod folder needs `git add -f`. A command of this README runs in `kacsa_underground_hub_dev`, unless it says otherwise.
+
 ## Overview
 
 The hub builds one to four stacked underground levels. Each level is a two-track platform with side platforms.
@@ -66,8 +77,8 @@ The game draws a divider between parameter groups: the hub (operation, track typ
 The tests run the construction script against stubs of the game modules. They prove the logic, not that the game accepts a call.
 
 ```text
-cd kacsa_underground_hub
-LUA_PATH="tests/?.lua;;" lua55 tests/hub_test.lua
+cd ../kacsa_underground_hub
+LUA_PATH="../kacsa_underground_hub_dev/tests/?.lua;;" lua55 ../kacsa_underground_hub_dev/tests/hub_test.lua
 ```
 
 `hub_test.lua` checks several levels (depth, terminals, node and lane indices, shafts), mixed rail and tram levels, the one design of all levels, the platform strips, the cargo modes, the dummy slot, the greying out of controls, the stairs between neighbouring levels and the shaft below a gap, the turned plot with its ground, its hedges and its three connections to the pavement, that every platform is reachable on foot from each connection, that every parameter can change after construction, and that the construction file names only existing functions, models and strings.

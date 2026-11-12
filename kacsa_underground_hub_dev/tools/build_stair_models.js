@@ -7,7 +7,7 @@
 //   exit_stairs.mdl      the two stairs from the shared platform down to the ring
 //   platform_rail.mdl    one piece of the railing around the shared platform
 //   back_hedge.mdl       a hedge of the game that does not reach down into the entrance stairs
-// Run from the mod folder: node tools/build_stair_models.js
+// Run in kacsa_underground_hub_dev: node tools/build_stair_models.js
 // The hall is read from the game archive, so the game MUST be installed. All lengths are in metres,
 // in the coordinates of the upper level.
 const fs = require('fs');
@@ -25,7 +25,7 @@ const HEDGE_PATH = '::/assets/buildings/res/hedges/';
 const HEDGE_MODEL = 'hdg_02_3m.mdl';
 const HEDGE_MESH = 'msh/hdg_02_3m_lod2.002_lod';
 const HEDGE_MIN_Z = -1.0;       // the ceiling of the entrance stairs lies 1.69 m deep below the back hedge
-const OUT_DIR = path.join(__dirname, '..', 'content', 'stations', 'rail', 'underground_hub', 'models');
+const OUT_DIR = path.join(__dirname, '..', '..', 'kacsa_underground_hub', 'content', 'stations', 'rail', 'underground_hub', 'models');
 
 // ---------- geometry of the hall of the game, measured in its mesh
 const DOOR_X = 13.0;            // plane of the corridor wall beside the foot of the stairs from the ring

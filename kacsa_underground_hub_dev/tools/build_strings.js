@@ -1,14 +1,14 @@
 // Builds strings.json for the 13 languages of the game.
 // A word that the game has is taken from the catalogue of the game, so the station uses the same
 // words as the game. Only the sentences and the names are translated here.
-// Run from the mod folder: node tools/build_strings.js
+// Run in kacsa_underground_hub_dev: node tools/build_strings.js
 // The catalogues are read from the game, so the game MUST be installed.
 const fs = require('fs');
 const path = require('path');
 
 const GAME_STRINGS = process.env.TF3_STRINGS
   || 'C:/Program Files (x86)/Steam/steamapps/common/Transport Fever 3/base/strings';
-const OUT_FILE = path.join(__dirname, '..', 'strings.json');
+const OUT_FILE = path.join(__dirname, '..', '..', 'kacsa_underground_hub', 'strings.json');
 const LANGUAGES = ['en', 'de', 'es', 'fr', 'it', 'ja', 'ko', 'nl', 'pl', 'pt_BR', 'ru', 'zh_CN', 'zh_TW'];
 const LEVELS = [1, 2, 3, 4];
 const CONTEXT = '\u0004'; // gettext joins a message context and a message with this character
