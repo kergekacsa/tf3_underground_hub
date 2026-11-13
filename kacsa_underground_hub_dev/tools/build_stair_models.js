@@ -179,10 +179,12 @@ function writeMesh(fileBase, mesh) {
 // The validation of the game asks for DXT1 where a material does not read the alpha channel of a
 // texture. The mod holds a copy of each such material in mat/, and a DXT1 copy of each such
 // texture in mat/tex/. A copy has the same colours as the texture of the game, bit for bit.
+// With `skippedLevels` a copy starts that many mipmap levels below the largest one. The asphalt
+// map of the track bed has 4096 x 4096 pixels, and its copy starts at 2048 x 2048.
 const OPAQUE_MATERIALS = [
   { material: HEDGE_PATH + 'mat/Mesh_mtl_Mat.mtl', textures: ['Mesh_mtl_albo.dds', 'Mesh_mtl_mga.dds'] },
   { material: HEDGE_PATH + 'mat/hdg_02_3m_Mat.mtl', textures: ['hdg_02_3m_mga.dds'] },
-  { material: GAME_MODEL_PATH + 'mat/underground_station_trackbed.mtl', textures: ['asphalt_01_metal_gloss_ao_h.dds'] },
+  { material: GAME_MODEL_PATH + 'mat/underground_station_trackbed.mtl', textures: ['asphalt_01_metal_gloss_ao_h.dds'], skippedLevels: 1 },
   { material: '::/infrastructure/street/tram/mat/new_medium_tram_paving.mtl', textures: ['new_medium_tram_metal_gloss_ao.dds'] },
 ];
 const ownName = (resource) => path.posix.basename(resource).toLowerCase();
@@ -197,22 +199,31 @@ function readGameResource(resource) {
   throw new Error('no archive of the game holds ' + resource);
 }
 
-// A DXT5 texture as DXT1: every block keeps its colour part and loses its alpha part.
-function dxt5ToDxt1(dds) {
+// A DXT5 texture as DXT1: every block keeps its colour part and loses its alpha part. The copy
+// leaves out the `skippedLevels` largest mipmap levels.
+function dxt5ToDxt1(dds, skippedLevels) {
   const HEADER = 128, HEIGHT = 12, WIDTH = 16, LINEAR_SIZE = 20, MIPMAPS = 28, FOURCC = 84;
   const DXT5_BLOCK = 16, DXT1_BLOCK = 8, ALPHA_PART = 8;
   if (dds.toString('ascii', FOURCC, FOURCC + 4) !== 'DXT5') throw new Error('not a DXT5 texture');
   const blocksAlong = (size, level) => Math.ceil(Math.max(1, size >> level) / 4);
   const blocksOf = (level) => blocksAlong(dds.readUInt32LE(WIDTH), level) * blocksAlong(dds.readUInt32LE(HEIGHT), level);
-  let blocks = 0;
-  for (let level = 0; level < Math.max(1, dds.readUInt32LE(MIPMAPS)); level++) blocks += blocksOf(level);
+  const levels = Math.max(1, dds.readUInt32LE(MIPMAPS));
+  if (skippedLevels >= levels) throw new Error('a texture has only ' + levels + ' mipmap levels');
+  let blocks = 0, skipped = 0;
+  for (let level = 0; level < levels; level++) {
+    blocks += blocksOf(level);
+    if (level < skippedLevels) skipped += blocksOf(level);
+  }
   if (dds.length !== HEADER + blocks * DXT5_BLOCK) throw new Error('a DXT5 texture has an unexpected size');
-  const out = Buffer.alloc(HEADER + blocks * DXT1_BLOCK);
+  const out = Buffer.alloc(HEADER + (blocks - skipped) * DXT1_BLOCK);
   dds.copy(out, 0, 0, HEADER);
   out.write('DXT1', FOURCC, 'ascii');
-  out.writeUInt32LE(blocksOf(0) * DXT1_BLOCK, LINEAR_SIZE);
-  for (let i = 0; i < blocks; i++) {
-    const from = HEADER + i * DXT5_BLOCK + ALPHA_PART, to = HEADER + i * DXT1_BLOCK;
+  out.writeUInt32LE(Math.max(1, dds.readUInt32LE(WIDTH) >> skippedLevels), WIDTH);
+  out.writeUInt32LE(Math.max(1, dds.readUInt32LE(HEIGHT) >> skippedLevels), HEIGHT);
+  out.writeUInt32LE(levels - skippedLevels, MIPMAPS);
+  out.writeUInt32LE(blocksOf(skippedLevels) * DXT1_BLOCK, LINEAR_SIZE);
+  for (let i = skipped; i < blocks; i++) {
+    const from = HEADER + i * DXT5_BLOCK + ALPHA_PART, to = HEADER + (i - skipped) * DXT1_BLOCK;
     const c0 = dds.readUInt16LE(from), c1 = dds.readUInt16LE(from + 2), indices = dds.readUInt32LE(from + 4);
     // DXT5 reads four colours from every block. DXT1 does so only when c0 > c1, so a block with
     // c0 < c1 gets its two colours swapped, and a block of one colour uses its first colour only.
@@ -226,13 +237,13 @@ function dxt5ToDxt1(dds) {
 
 function writeOpaqueMaterials() {
   fs.mkdirSync(path.join(OUT_DIR, 'mat', 'tex'), { recursive: true });
-  for (const { material, textures } of OPAQUE_MATERIALS) {
+  for (const { material, textures, skippedLevels = 0 } of OPAQUE_MATERIALS) {
     const folder = path.posix.dirname(material) + '/';
     const copied = new Set();
     const text = readGameResource(material).toString('utf8').replace(/fileName = "([^"]+)"/g, (_, name) => {
       const resource = name.startsWith('/') ? '::' + name : folder + name;
       if (!textures.includes(path.posix.basename(name))) return 'fileName = "' + resource + '"';
-      fs.writeFileSync(path.join(OUT_DIR, 'mat', 'tex', ownName(name)), dxt5ToDxt1(readGameResource(resource)));
+      fs.writeFileSync(path.join(OUT_DIR, 'mat', 'tex', ownName(name)), dxt5ToDxt1(readGameResource(resource), skippedLevels));
       copied.add(path.posix.basename(name));
       return 'fileName = "tex/' + ownName(name) + '"';
     });

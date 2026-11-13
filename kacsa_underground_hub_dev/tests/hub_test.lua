@@ -297,6 +297,9 @@ do
 		{ model = "hall_doors", copy = "new_medium_tram_paving", game = "tram/mat/new_medium_tram_paving.mtl", textures = { "new_medium_tram_metal_gloss_ao" } },
 	}
 	local FOURCC_FIRST, FOURCC_LAST = 85, 88
+	local WIDTH_FIRST, WIDTH_LAST = 17, 20
+	-- The asphalt map of the game has 4096 x 4096 pixels. Its copy starts one mipmap level lower.
+	local WIDEST_COPY = 2048
 	for _, entry in ipairs(MATERIAL_COPIES) do
 		local description = support.readFile(MODELS .. entry.model .. ".mdl")
 		check(description:find('"mat/' .. entry.copy .. '.mtl"', 1, true) and not description:find(entry.game, 1, true), "model " .. entry.model .. " uses the material copy " .. entry.copy)
@@ -307,6 +310,8 @@ do
 			local head = file:read(FOURCC_LAST)
 			file:close()
 			check(head:sub(FOURCC_FIRST, FOURCC_LAST) == "DXT1", "texture copy " .. texture .. " has the format DXT1")
+			local width = string.unpack("<I4", head:sub(WIDTH_FIRST, WIDTH_LAST))
+			check(width <= WIDEST_COPY, "texture copy " .. texture .. " is at most " .. WIDEST_COPY .. " pixels wide, found " .. width)
 		end
 	end
 	for _, mode in ipairs({ 1, 2, 3 }) do

@@ -1,6 +1,6 @@
 {
   "modId": "kacsa_underground_hub",
-  "revision": 1,
+  "revision": 2,
   "severityAdd": "None",
   "severityRemove": "Critical",
   "visible": true,
