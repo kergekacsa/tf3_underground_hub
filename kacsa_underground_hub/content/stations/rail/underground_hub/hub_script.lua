@@ -1280,7 +1280,8 @@ return {
 	checkHiddenFn = function() return "Hidden" end,
 	updateFn = function(captureParams, params)
 		local electric = (params.catenary or 2) == 2
-		local railModes = electric and {"TRAIN", "ELECTRIC_TRAIN"} or {"TRAIN"}
+		-- TRAM_TRACK and ELECTRIC_TRAM_TRACK are the modes of a light rail vehicle on a railway track.
+		local railModes = electric and {"TRAIN", "ELECTRIC_TRAIN", "TRAM_TRACK", "ELECTRIC_TRAM_TRACK"} or {"TRAIN", "TRAM_TRACK"}
 		local operation = readOperation(params)
 		local levels = readLevels(captureParams, params)
 

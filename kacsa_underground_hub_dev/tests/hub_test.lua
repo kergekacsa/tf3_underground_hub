@@ -487,6 +487,31 @@ do
 	end
 	check(terminals[7].transportModes[1] == "TRAIN" and terminals[7].vehicleNode[2] == 49, "rail level after two tram levels starts at node 49")
 	check(terminals[8].vehicleNode[2] == 57, "second track of that level is node 57")
+
+	-- A rail level accepts light rail vehicles, as the train station of the game does: its
+	-- terminals and the lanes of its tracks inside the hall list the same modes as the game.
+	local WITH_CATENARY = { "TRAIN", "ELECTRIC_TRAIN", "TRAM_TRACK", "ELECTRIC_TRAM_TRACK" }
+	local WITHOUT_CATENARY = { "TRAIN", "TRAM_TRACK" }
+	local function sameList(found, expected)
+		if type(found) ~= "table" or #found ~= #expected then return false end
+		for index, value in ipairs(expected) do
+			if found[index] ~= value then return false end
+		end
+		return true
+	end
+	for _, case in ipairs({ { catenary = 2, modes = WITH_CATENARY, suffix = "_electric" }, { catenary = 1, modes = WITHOUT_CATENARY, suffix = "" } }) do
+		local _, railSub = build({ catenary = case.catenary })
+		local railTerminals = railSub.station.terminals
+		check(#railTerminals > 0, "a rail hub has terminals, catenary " .. case.catenary)
+		for index, terminal in ipairs(railTerminals) do
+			check(sameList(terminal.transportModes, case.modes), "rail terminal " .. index .. " serves trains and light rail, catenary " .. case.catenary)
+		end
+		for _, style in ipairs({ "track_simple", "track", "track_high_speed" }) do
+			local text = support.readFile("content/stations/rail/underground_hub/" .. style .. case.suffix .. ".street_template.lua")
+			local lane = text:match('%["transportModes"%] = {([^}]*)}')
+			check(lane == '"' .. table.concat(case.modes, '", "') .. '"', "the lane of " .. style .. case.suffix .. " serves trains and light rail")
+		end
+	end
 	local _, _, data = build({})
 	local plain = data.updateFn(CAPTURE, { level2Vehicle = 3, catenary = 1 })
 	check(plain.edgeLists[9].spec.tramTrackType == "YES", "catenary off gives plain tram track")

@@ -25,7 +25,7 @@ return {
 ["laneConfigs"] = {{
 ["width"] = 4,
 ["speed"] = 27.77700043,
-["transportModes"] = {"TRAIN", "ELECTRIC_TRAIN"},
+["transportModes"] = {"TRAIN", "ELECTRIC_TRAIN", "TRAM_TRACK", "ELECTRIC_TRAM_TRACK"},
 ["height"] = 0.5299999714,
 ["offset"] = 0,
 ["forward"] = true,
